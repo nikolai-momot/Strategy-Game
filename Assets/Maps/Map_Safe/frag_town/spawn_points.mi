@@ -1,0 +1,85 @@
+{mission
+	{Entity "map_point" 0x8000
+		{Position -2867.12 -721.04}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 1}
+	}
+	{Entity "map_point" 0x8001
+		{Position 980.13 -2949.28}
+		{xform zl 90}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 2}
+	}
+	{Entity "map_point" 0x8002
+		{Position 2279.95 3118.62 -0.02}
+		{xform zl -90}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 3}
+	}
+	{Entity "map_point" 0x8003
+		{Position 3082.88 352.46}
+		{xform zl 180}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 4}
+	}
+	{Tags "keep_places_without_door" 0x2c00}
+	{Tags "keep_places_without_door" 0x2c2c}
+	{Tags "keep_places_without_door" 0x2c2d}
+	{Tags "keep_places_without_door" 0x2c37}
+	{Tags "keep_places_without_door" 0x1c00}
+	{Tags "keep_places_without_door" 0x1c05}
+	{Tags "keep_places_without_door" 0x7000}
+	{Tags "keep_places_without_door" 0x7008}
+	{Tags "keep_places_without_door" 0x700f}
+	{Tags "keep_places_without_door" 0x2006}
+	{Tags "keep_places_without_door" 0x200f}
+	{Tags "keep_places_without_door" 0x2019}
+	{Tags "keep_places_without_door" 0x2023}
+	{Tags "keep_places_without_door" 0x402d}
+	{Tags "keep_places_without_door" 0x402e}
+	{Tags "keep_places_without_door" 0x402f}
+	{Tags "keep_places_without_door" 0x4038}
+	{Tags "keep_places_without_door" 0x4056}
+	{Tags "keep_places_without_door" 0x1002}
+	{Tags "keep_places_without_door" 0x600e}
+	{Tags "keep_places_without_door" 0x5012}
+	{Tags "keep_places_without_door" 0x1816}
+	{Tags "keep_places_without_door" 0x181b}
+	{Tags "keep_places_without_door" 0x181c}
+	{Tags "keep_places_without_door" 0x501e}
+	{Tags "keep_places_without_door" 0x506c}
+	{Tags "keep_places_without_door" 0x493}
+	{Tags "keep_places_without_door" 0x4db}
+	{Tags "keep_places_without_door" 0x20b0}
+	{Tags "keep_places_without_door" 0x60a0}
+	{Tags "keep_places_without_door" 0x2c20}
+	{Tags "keep_places_without_door" 0x5400}
+	{Tags "keep_places_without_door" 0x5405}
+	{Tags "west" 0x8000}
+	{Tags "north" 0x8001}
+	{Tags "south" 0x8002}
+	{Tags "east" 0x8003}
+	{Helpers
+		{reinforcements
+			{scoreTotal 0}
+			{scoreCurrent 0}
+		}
+	}
+	{Fog 1}
+}

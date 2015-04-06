@@ -1,0 +1,83 @@
+{mission
+	{Entity "map_point" 0x8000
+		{Position -3931.01 195.92}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 1}
+	}
+	{Entity "map_point" 0x8001
+		{Position -1864.25 -2571.21}
+		{xform zl 90}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 2}
+	}
+	{Entity "map_point" 0x8002
+		{Position -3317.45 2443.63 -0.02}
+		{xform zl -90}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 3}
+	}
+	{Entity "map_point" 0x8003
+		{Position -813 226}
+		{xform zl 180}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 0}
+		{MID 4}
+	}
+	{Tags "keep_places_without_door" 0x1146}
+	{Tags "keep_places_without_door" 0x113c}
+	{Tags "keep_places_without_door" 0x6d}
+	{Tags "keep_places_without_door" 0x500}
+	{Tags "keep_places_without_door" 0x80d}
+	{Tags "keep_places_without_door" 0x370}
+	{Tags "keep_places_without_door" 0xe5f}
+	{Tags "keep_places_without_door" 0x1400}
+	{Tags "keep_places_without_door" 0x183f}
+	{Tags "keep_places_without_door" 0x1883}
+	{Tags "keep_places_without_door" 0x61c}
+	{Tags "keep_places_without_door" 0xe5a}
+	{Tags "keep_places_without_door" 0x1c0e}
+	{Tags "keep_places_without_door" 0xe6a}
+	{Tags "keep_places_without_door" 0x1c4d}
+	{Tags "keep_places_without_door" 0x49f}
+	{Tags "keep_places_without_door" 0x188a}
+	{Tags "keep_places_without_door" 0x61d}
+	{Tags "keep_places_without_door" 0x1407}
+	{Tags "keep_places_without_door" 0x80e}
+	{Tags "keep_places_without_door" 0x1e03}
+	{Tags "keep_places_without_door" 0x1105}
+	{Tags "keep_places_without_door" 0x908}
+	{Tags "keep_places_without_door" 0x818}
+	{Tags "keep_places_without_door" 0x1822}
+	{Tags "keep_places_without_door" 0xc17}
+	{Tags "keep_places_without_door" 0x1502}
+	{Tags "keep_places_without_door" 0x92b}
+	{Tags "keep_places_without_door" 0x76a}
+	{Tags "keep_places_without_door" 0xd8}
+	{Tags "keep_places_without_door" 0x4004}
+	{Tags "west" 0x8000}
+	{Tags "north" 0x8001}
+	{Tags "south" 0x8002}
+	{Tags "east" 0x8003}
+	{Helpers
+		{reinforcements
+			{scoreTotal 0}
+			{scoreCurrent 0}
+		}
+	}
+	{Fog 1}
+}

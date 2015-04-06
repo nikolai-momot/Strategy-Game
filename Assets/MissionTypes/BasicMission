@@ -1,0 +1,69 @@
+{Environment "skirmish/_bonus_01"}
+	{Helpers
+		{reinforcements
+			{scoreTotal 0}
+			{scoreCurrent 0}
+		}
+		{triggers
+			{"cpugo"
+				{condition
+				}
+				{actions
+					{"waypoint"
+						{who
+							{type actor}
+							{actors
+								{player "0"}
+								{relation enemy}
+							}
+						}
+						{action
+							{type start}
+							{waypoint "0"}
+						}
+					}
+				}
+			}
+		}
+		{waypoints
+			{"0"
+				{position 57.4966 -3146.28 -6}
+				{transition "1"}
+				{transition "2"}
+				{transition "3"}
+				{transition "4"}
+				{transition "5"}
+				{transition "6"}
+				{transition "7"}
+				{transition "8"}
+			}
+			{"1"
+				{position -7.31549 27.1942 -6}
+			}
+			{"2"
+				{position 355.79 575.629 -6}
+			}
+			{"3"
+				{position 778.345 -76.0458 -6}
+			}
+			{"4"
+				{position 1477.46 484.973 -6}
+			}
+			{"5"
+				{position -291.551 638.039 -6}
+			}
+			{"6"
+				{position 1426.65 -182.017 -6}
+			}
+			{"7"
+				{position -552.275 218.381 -6}
+			}
+			{"8"
+				{position -994.413 321.335 -6}
+			}
+		}
+	}
+	{Players
+		{user 0}
+	}
+}

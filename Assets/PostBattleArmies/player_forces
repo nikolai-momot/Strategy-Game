@@ -1,0 +1,1124 @@
+;=====Start Block for: Player Army =====
+
+	{Human "mp/ger/rifle" 0x9013
+
+
+		{Player 0}
+		{Operatable}
+		{MID 32}
+		{Chassis
+			{MovementSpeed 0.075}
+		}
+		{NameId 102 46}
+		{LastItem "mauzer"}
+	}
+	{Inventory 0x9013		{box
+			{clear}
+			{item "mauzer" {cell 0 0}}
+			{item "rifle" "ammo" 25 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0x9013
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/smg" 0x9018
+
+
+		{Player 0}
+		{Operatable}
+		{MID 33}
+		{Chassis
+			{MovementSpeed 0.075}
+		}
+		{NameId 54 28}
+		{LastItem "mp40"}
+	}
+	{Inventory 0x9018		{box
+			{clear}
+			{item "mp40" {cell 0 0}}
+			{item "pistol" "ammo" 100 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" 3 {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "smoke" "grenade" {cell 2 4}}
+			{item "helmet1_ger" {cell 4 4}{user "head"}}
+		}
+	}
+
+	{Brain 0x9018
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/squadleader" 0x901a
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 34}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 137 132}
+		{LastDyingAnimation "stand_die_spot"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x901a		{box
+			{clear}
+			{item "pistol" "ammo" 36 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" 3 {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "m24x5" "grenade" {cell 2 4}}
+			{item "smoke" "grenade" {cell 4 4}}
+			{item "smoke" "grenade" {cell 0 5}}
+			{item "fieldcap1_ger" {cell 2 5}{user "head"}}
+		}
+	}
+
+	{Brain 0x901a
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0x9014
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -13.962}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 47}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 120 100}
+		{LastDyingAnimation "stand_die_spot"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9014		{box
+			{clear}
+			{item "rifle" "ammo" 20 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0x9014
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0x9015
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 48}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 46 31}
+		{LastDyingAnimation "stand_scenic-die_front_2"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9015		{box
+			{clear}
+			{item "rifle" "ammo" 20 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0x9015
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/mgun" 0x901c
+
+
+		{Extender "vitality"
+			{Health
+				{current 89.5924}
+			}
+		}
+		{Player 0}
+		{Operatable}
+		{MID 49}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.125}
+		}
+		{InfantryKills 2}
+		{Score 2}
+		{NameId 81 148}
+		{Cover
+			{sector -2257.94 -76.3821 {type "snipe_cover"}
+				{wall -2249.56 -67.7051 -2252.71 -88.6427}
+				{row 0}
+				{link 0x374}
+			}
+		}
+		{FsmState "squat"}
+	}
+	{Inventory 0x901c		{box
+			{clear}
+			{item "mg42" filling "mgun" "ammo" 25 {cell 0 0}{user "hand_right"}}
+			{item "mgun" "ammo" 100 {cell 0 3}}
+			{item "mgun" "ammo" 100 {cell 2 3}}
+			{item "mgun" "ammo" 100 {cell 4 3}}
+			{item "mgun" "ammo" 100 {cell 0 4}}
+			{item "mgun" "ammo" 100 {cell 2 4}}
+			{item "mgun" "ammo" 100 {cell 4 4}}
+			{item "bandage" 3 {cell 0 5}}
+			{item "sandbag_kit" {cell 2 5}}
+			{item "helmet2_ger" {cell 4 5}{user "head"}}
+		}
+	}
+
+	{Brain 0x901c
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0x9012
+
+
+		{Extender "vitality"
+			{Health
+				{current 90.0436}
+			}
+		}
+		{Interaction
+			{Flags "talk"}
+			{Calls
+				{1900 11.401}
+			}
+		}
+		{Player 0}
+		{Operatable}
+		{MID 50}
+		{Weaponry
+			{State
+				{Ammo "weapon_bullet"
+					{Recovering 1.757}
+				}
+				{AccuracyByMotion
+					{value 0.774}
+					{prevposition -2245.87 -180.58 7.32421}
+					{prevdirection 0.834008 0.544534 0.0889686}
+				}
+			}
+		}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.125}
+		}
+		{NameId 8 116}
+		{Cover
+			{sector -2254.63 -195.861 {type "squat_lie"}
+				{wall -2132.59 -142.284 -2268.82 -227.247}
+				{row 0}
+				{link 0x37c}
+			}
+		}
+		{FsmState "squat"}
+	}
+	{Inventory 0x9012		{box
+			{clear}
+			{item "mauzer" filling "rifle" "ammo" 2 {cell 0 0}{user "hand_right"}}
+			{item "rifle" "ammo" 10 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0x9012
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0xe010
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -137.134}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 51}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 116 5}
+		{LastDyingAnimation "stand_die_spot_1"}
+		{FsmState "dead"}
+	}
+	{Inventory 0xe010		{box
+			{clear}
+			{item "rifle" "ammo" 25 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0xe010
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0xe011
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 52}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 126 135}
+		{LastDyingAnimation "squat_die"}
+		{FsmState "dead"}
+	}
+	{Inventory 0xe011		{box
+			{clear}
+			{item "rifle" "ammo" 15 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0xe011
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0xe012
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -98.1292}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 53}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 134 143}
+		{LastDyingAnimation "squat_die"}
+		{FsmState "dead"}
+	}
+	{Inventory 0xe012		{box
+			{clear}
+			{item "rifle" "ammo" 25 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0xe012
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0xe013
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 54}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 16 96}
+		{LastDyingAnimation "stand_die_spot"}
+		{FsmState "dead"}
+	}
+	{Inventory 0xe013		{box
+			{clear}
+			{item "rifle" "ammo" 25 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0xe013
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/smg" 0xe016
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 55}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 22 118}
+		{LastDyingAnimation "squat_die_front"}
+		{FsmState "dead"}
+	}
+	{Inventory 0xe016		{box
+			{clear}
+			{item "pistol" "ammo" 100 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "smoke" "grenade" {cell 2 4}}
+			{item "helmet1_ger" {cell 4 4}{user "head"}}
+		}
+	}
+
+	{Brain 0xe016
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/squadleader" 0xe018
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -33.6872}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 56}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{InfantryKills 1}
+		{Score 1}
+		{NameId 143 69}
+		{LastDyingAnimation "stand_die_front_2"}
+		{FsmState "dead"}
+	}
+	{Inventory 0xe018		{box
+			{clear}
+			{item "pistol" "ammo" 68 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" 3 {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "m24x5" "grenade" {cell 2 4}}
+			{item "smoke" "grenade" {cell 4 4}}
+			{item "smoke" "grenade" {cell 0 5}}
+			{item "fieldcap1_ger" {cell 2 5}{user "head"}}
+		}
+	}
+
+	{Brain 0xe018
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0x9010
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -27.3099}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 58}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 47 61}
+		{LastDyingAnimation "stand_die_front_3"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9010		{box
+			{clear}
+			{item "rifle" "ammo" 25 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0x9010
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/rifle" 0x9011
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -8.4694}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "talk" "die_sound"}
+			{Calls
+				{1900 8.081}
+				{1969 2.435}
+			}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 59}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.09375}
+		}
+		{NameId 112 7}
+		{LastDyingAnimation "squat_die"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9011		{box
+			{clear}
+			{item "rifle" "ammo" 5 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m24" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "fieldcap_ger" {cell 2 3}{user "head"}}
+		}
+	}
+
+	{Brain 0x9011
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/smg" 0x9016
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 60}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 131 60}
+		{LastDyingAnimation "squat_die_front"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9016		{box
+			{clear}
+			{item "pistol" "ammo" 36 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" 3 {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "smoke" "grenade" {cell 2 4}}
+			{item "helmet1_ger" {cell 4 4}{user "head"}}
+		}
+	}
+
+	{Brain 0x9016
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/smg" 0x9017
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current 0}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "talk" "die_sound"}
+			{Calls
+				{1900 1.771}
+				{1969 2.84}
+			}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 62}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.125}
+		}
+		{NameId 75 80}
+		{LastDyingAnimation "squat_die_front"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9017		{box
+			{clear}
+			{item "pistol" "ammo" 36 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" 3 {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "smoke" "grenade" {cell 2 4}}
+			{item "helmet1_ger" {cell 4 4}{user "head"}}
+		}
+	}
+
+	{Brain 0x9017
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/smg" 0x9019
+
+
+		{Extender "vitality"
+			{Dead}
+			{Health
+				{current -13.0848}
+			}
+			{Stamina
+				{current 0}
+			}
+		}
+		{Interaction
+			{Flags "die_sound"}
+		}
+		{DisableObstacles}
+		{Player 0}
+		{MID 64}
+		{Able "-select"}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.02625}
+		}
+		{NameId 107 122}
+		{LastItem "mp40"}
+		{LastDyingAnimation "stand_scenic-die_front_1"}
+		{FsmState "dead"}
+	}
+	{Inventory 0x9019		{box
+			{clear}
+			{item "pistol" "ammo" 100 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "bandage" 3 {cell 0 3}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "smoke" "grenade" {cell 2 4}}
+			{item "helmet1_ger" {cell 4 4}{user "head"}}
+		}
+	}
+
+	{Brain 0x9019
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/squadleader" 0x901b
+
+
+		{Player 0}
+		{Operatable}
+		{MID 65}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.125}
+		}
+		{NameId 98 142}
+		{LastItem "mp40"}
+		{Cover
+			{sector -1924.88 702.819 {type "snipe_cover"}
+				{wall -1907.42 707.02 -1937.55 684.744}
+				{row 0}
+				{link 0x93}
+			}
+		}
+		{FsmState "squat"}
+	}
+	{Inventory 0x901b		{box
+			{clear}
+			{item "mp40" filled {cell 0 0}{user "hand_right"}}
+			{item "pistol" "ammo" 100 {cell 4 0}}
+			{item "pistol" "ammo" 100 {cell 4 1}}
+			{item "pistol" "ammo" 100 {cell 0 2}}
+			{item "pistol" "ammo" 100 {cell 2 2}}
+			{item "pistol" "ammo" 100 {cell 4 2}}
+			{item "m24" "grenade" {cell 2 3}}
+			{item "m24" "grenade" {cell 4 3}}
+			{item "m24x5" "grenade" {cell 0 4}}
+			{item "m24x5" "grenade" {cell 2 4}}
+			{item "smoke" "grenade" {cell 4 4}}
+			{item "smoke" "grenade" {cell 0 5}}
+			{item "fieldcap1_ger" {cell 2 5}{user "head"}}
+		}
+	}
+
+	{Brain 0x901b
+		{Properties
+		{control user}
+}
+}
+	{Human "mp/ger/mgun" 0x901d
+
+
+		{Interaction
+			{Calls
+				{"after_swim" 2123 1.437}
+			}
+		}
+		{Player 0}
+		{Operatable}
+		{MID 68}
+		{Weaponry
+			{State
+				{AccuracyByMotion
+					{value 0.75}
+					{prevposition -1999.11 503.67 28.9017}
+					{prevdirection 0.773494 -0.633798 -0.00277866}
+				}
+			}
+		}
+		{Chassis
+			{MovementMode 2}
+			{MovementSpeed 0.125}
+		}
+		{NameId 107 70}
+		{Cover
+			{sector -2018.71 515.259 {type "snipe_cover"}
+				{wall -1993.76 539.018 -2024.01 495.283}
+				{row 0}
+				{link 0x141e}
+			}
+		}
+		{FsmState "snipe"}
+	}
+	{Inventory 0x901d		{box
+			{clear}
+			{item "mg42" filled {cell 0 0}{user "hand_right"}}
+			{item "mgun" "ammo" 100 {cell 4 2}}
+			{item "mgun" "ammo" 100 {cell 0 3}}
+			{item "mgun" "ammo" 100 {cell 2 3}}
+			{item "mgun" "ammo" 100 {cell 4 3}}
+			{item "mgun" "ammo" 100 {cell 0 4}}
+			{item "mgun" "ammo" 100 {cell 2 4}}
+			{item "mgun" "ammo" 100 {cell 4 4}}
+			{item "bandage" 3 {cell 0 5}}
+			{item "sandbag_kit" {cell 2 5}}
+			{item "helmet2_ger" {cell 4 5}{user "head"}}
+		}
+	}
+
+	{Brain 0x901d
+		{Properties
+		{control user}
+}
+}
+	{Entity "sdkfz251_1" 0x9000
+
+
+		{Skeleton
+			{BoneSave "basis pivot_front steer_l1 wheell1"
+				{Value 2.15815}
+			}
+			{BoneSave "basis pivot_front steer_r1 wheelr1"
+				{Value 2.15815}
+			}
+			{BoneSave "basis body"
+				{Orientation
+					1 0 0.004
+					0 1 0
+					-0.004 0 1
+				}
+			}
+			{BoneSave "basis body turret_mgun"
+				{Value -0.149582}
+			}
+			{BoneSave "basis body turret_mgun mgun_rot"
+				{Value -0.0423899}
+			}
+			{BoneSave "basis body turret_mgun mgun_rot mgun_rot2"
+				{Value -0.261689}
+			}
+			{BoneSave "basis body wheell2"
+				{Value 1.95696}
+			}
+			{BoneSave "basis body wheell9"
+				{Value 1.95696}
+			}
+			{BoneSave "basis body wheelr9"
+				{Value 1.95696}
+			}
+			{BoneSave "basis body wheelr2"
+				{Value 1.95696}
+			}
+			{BoneSave "basis body at1"
+				{Orientation
+					1 0 -0.019
+					0 1 0
+					0.019 0 1
+				}
+			}
+			{BoneSave "basis body at1 at2"
+				{Orientation
+					1 0 -0.019
+					0 1 0
+					0.019 0 1
+				}
+			}
+			{BoneSave "basis body at1 at2 at3"
+				{Orientation
+					1 0 -0.019
+					0 1 0
+					0.019 0 1
+				}
+			}
+			{BoneSave "basis body at1 at2 at3 at4"
+				{Orientation
+					1 0 -0.019
+					0 1 0
+					0.019 0 1
+				}
+			}
+			{BoneSave "basis body detail8"
+				{Visible 0}
+				{Enabled 0}
+			}
+			{BoneSave "basis body detail7"
+				{Visible 0}
+				{Enabled 0}
+			}
+			{BoneSave "basis body detail4"
+				{Visible 0}
+				{Enabled 0}
+			}
+			{BoneSave "basis wheelsr wheelr8"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsr wheelr7"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsr wheelr6"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsr wheelr5"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsr wheelr4"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsr wheelr3"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsl wheell3"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsl wheell4"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsl wheell5"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsl wheell6"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsl wheell7"
+				{Value 1.95696}
+			}
+			{BoneSave "basis wheelsl wheell8"
+				{Value 1.95696}
+			}
+		}
+		{Placer
+			{State "commander" {Broken}}
+		}
+		{Extender "enumerator"
+			{number 388}
+			{digit_folder "ger"}
+		}
+		{Interaction
+			{Calls
+				{"check_sinking" 2511 0.405}
+			}
+		}
+		{Player 0}
+		{Operatable}
+		{MID 70}
+		{Weaponry
+			{State
+				{Ammo "weapon_bullet"
+					{Recovering 1.023}
+					{Loading "mgun" "ammo" 50}
+				}
+			}
+		}
+		{Chassis
+			{MovementSpeed 0.0666667}
+			{FuelBag
+				{Remain 150.614}
+			}
+			{CurrentGearDir 0}
+		}
+	}
+
+{Link 0x9013 {0x9000 "driver"}}
+{Link 0x9018 {0x9000 "gunner"}}
+	{Inventory 0x9000		{box
+			{clear}
+			{item "repair_kit" {cell 0 0}}
+			{item "can" filling "fuel" 60 {cell 2 0}}
+			{item "m24x5" "grenade" 10 {cell 4 0}}
+			{item "m24" "grenade" 25 {cell 4 1}}
+			{item "smoke" "grenade" 10 {cell 0 2}}
+			{item "bandage" 10 {cell 2 2}}
+			{item "dynamite" {cell 4 2}}
+			{item "mgun" "ammo" 2300 {cell 0 3}}
+			{item "mg42" {cell 0 4}{user "mgun"}}
+		}
+	}
+
+
+	{Brain 0x9000
+		{Properties
+		{control user}
+}
+}
+{Tags "vehicle" 0x9000}
+
+{Link 0x9013 {0x9000 "driver"}}
+{Link 0x9018 {0x9000 "gunner"}}
+
+;=====End Block=====
+

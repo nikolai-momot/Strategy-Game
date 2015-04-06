@@ -1,0 +1,90 @@
+{mission
+	{Entity "map_point" 0x8000
+		{Position -4792.85 1094.87}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 255}
+		{MID 1}
+	}
+	{Entity "map_point" 0x8001
+		{Position 1208.02 -4631.15}
+		{xform zl 90}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 255}
+		{MID 2}
+	}
+	{Entity "map_point" 0x8002
+		{Position -328.88 7039.15 -0.02}
+		{xform zl -90}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 255}
+		{MID 3}
+	}
+	{Entity "map_point" 0x8003
+		{Position 7572.87 -1172.37}
+		{xform zl 180}
+		{Extender "map_point"
+			{phase 0}
+			{order 0}
+		}
+		{Player 255}
+		{MID 4}
+	}
+	{Tags "keep_places_without_door" 0x2017}
+	{Tags "keep_places_without_door" 0x203e}
+	{Tags "keep_places_without_door" 0x204b}
+	{Tags "keep_places_without_door" 0x4401}
+	{Tags "keep_places_without_door" 0x1400}
+	{Tags "keep_places_without_door" 0x161}
+	{Tags "keep_places_without_door" 0x2863}
+	{Tags "keep_places_without_door" 0x41e8}
+	{Tags "keep_places_without_door" 0x4207}
+	{Tags "keep_places_without_door" 0x60b2}
+	{Tags "keep_places_without_door" 0x44f}
+	{Tags "keep_places_without_door" 0x450}
+	{Tags "keep_places_without_door" 0x502}
+	{Tags "keep_places_without_door" 0x4f7}
+	{Tags "keep_places_without_door" 0x1079}
+	{Tags "keep_places_without_door" 0x518}
+	{Tags "keep_places_without_door" 0x51c}
+	{Tags "keep_places_without_door" 0x51d}
+	{Tags "keep_places_without_door" 0x6176}
+	{Tags "keep_places_without_door" 0x601}
+	{Tags "keep_places_without_door" 0x4097}
+	{Tags "keep_places_without_door" 0x40fd}
+	{Tags "keep_places_without_door" 0x421b}
+	{Tags "keep_places_without_door" 0x60f9}
+	{Tags "keep_places_without_door" 0x3010}
+	{Tags "keep_places_without_door" 0x6001}
+	{Tags "keep_places_without_door" 0x75a}
+	{Tags "keep_places_without_door" 0x201b}
+	{Tags "burned" 0x86a}
+	{Tags "keep_places_without_door" 0xa22}
+	{Tags "keep_places_without_door" 0x44b2}
+	{Tags "keep_places_without_door" 0x454a}
+	{Tags "keep_places_without_door" 0x45bf}
+	{Tags "keep_places_without_door" 0x472c}
+	{Tags "keep_places_without_door" 0x472d}
+	{Tags "keep_places_without_door" 0x4769}
+	{Tags "keep_places_without_door" 0x476d}
+	{Tags "keep_places_without_door" 0x1069}
+	{Tags "west" 0x8000}
+	{Tags "north" 0x8001}
+	{Tags "south" 0x8002}
+	{Tags "east" 0x8003}
+	{Helpers
+		{reinforcements
+			{scoreTotal 0}
+			{scoreCurrent 0}
+		}
+	}
+	{Fog 1}
+}

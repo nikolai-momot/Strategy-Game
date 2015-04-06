@@ -1,0 +1,207 @@
+{mission
+	{Human "mp/usa/rifle" 0x8000
+		{Position -1743.06 5552.41}
+		{xform zl -90.36}
+		{Player 0}
+		{MID 1}
+		{Weaponry
+			{State
+				{AccuracyByMotion
+					{value 0.7675}
+					{prevposition -1746.44 5533.51 38.2874}
+					{prevdirection -0.196837 -0.980334 -0.0142294}
+				}
+			}
+		}
+		{NameId 90 1}
+		{FsmState "stand"}
+	}
+	{Entity "m4a4" 0x8002
+		{Position -1849.2 5514.82 13.59}
+		{xform zl -14.14 y 6.21 zw -66.8}
+		{Extender "enumerator"
+			{number 101}
+		}
+		{Player 0}
+		{MID 2}
+	}
+	{Human "mp/usa/tankman" 0x8004
+		{Position -2002.37 5542.15}
+		{Player 0}
+		{MID 3}
+		{NameId 90 0}
+		{FsmState "stand"}
+	}
+	{Human "mp/usa/tankman" 0x8006
+		{Position -2016.73 5529.69}
+		{Player 0}
+		{MID 4}
+		{NameId 31 57}
+		{FsmState "stand"}
+	}
+	{Human "mp/usa/tankman" 0x8008
+		{Position -2030.73 5554.12 25.05}
+		{Player 0}
+		{MID 5}
+		{NameId 112 27}
+		{FsmState "stand"}
+	}
+	{Human "mp/usa/tankman2" 0x800a
+		{Position -1979.24 5558.92 23.15}
+		{Player 0}
+		{MID 6}
+		{NameId 23 47}
+		{FsmState "stand"}
+	}
+	{Human "mp/usa/tankman" 0x800c
+		{Position -2011.24 5565.93 24.94}
+		{Player 0}
+		{MID 7}
+		{NameId 68 98}
+		{FsmState "stand"}
+	}
+	{Tags "keep_places_without_door" 0x904}
+	{Tags "keep_places_without_door" 0xa97}
+	{Tags "keep_places_without_door" 0x40f4}
+	{Tags "keep_places_without_door" 0x40f5}
+	{Tags "keep_places_without_door" 0xa98}
+	{Tags "keep_places_without_door" 0xa9a}
+	{Tags "keep_places_without_door" 0xa9b}
+	{Tags "keep_places_without_door" 0xcf0}
+	{Tags "keep_places_without_door" 0xaad}
+	{Tags "keep_places_without_door" 0xace}
+	{Tags "keep_places_without_door" 0xacf}
+	{Tags "keep_places_without_door" 0xb17}
+	{Tags "keep_places_without_door" 0xb31}
+	{Tags "keep_places_without_door" 0xced}
+	{Tags "keep_places_without_door" 0xd59}
+	{Tags "keep_places_without_door" 0xd5a}
+	{Tags "keep_places_without_door" 0xd5c}
+	{Tags "keep_places_without_door" 0xd5e}
+	{Tags "keep_places_without_door" 0xd81}
+	{Tags "keep_places_without_door" 0xd87}
+	{Tags "keep_places_without_door" 0xf96}
+	{Tags "keep_places_without_door" 0xf97}
+	{Tags "keep_places_without_door" 0x4150}
+	{Tags "keep_places_without_door" 0xfcd}
+	{Tags "keep_places_without_door" 0xfce}
+	{Tags "keep_places_without_door" 0xfd6}
+	{Tags "keep_places_without_door" 0x414f}
+	{Tags "keep_places_without_door" 0x124a}
+	{Tags "keep_places_without_door" 0xfe8}
+	{Tags "keep_places_without_door" 0xfee}
+	{Tags "keep_places_without_door" 0x1622}
+	{Tags "keep_places_without_door" 0x1144}
+	{Tags "keep_places_without_door" 0x11da}
+	{Tags "keep_places_without_door" 0x11de}
+	{Tags "keep_places_without_door" 0x41b2}
+	{Tags "keep_places_without_door" 0x120f}
+	{Tags "keep_places_without_door" 0x121d}
+	{Tags "keep_places_without_door" 0x1220}
+	{Tags "keep_places_without_door" 0x70aa}
+	{Tags "keep_places_without_door" 0x1803}
+	{Tags "keep_places_without_door" 0x1848}
+	{Tags "keep_places_without_door" 0x110d}
+	{Tags "keep_places_without_door" 0x21ff}
+	{Inventory 0x8000
+		{box
+			{clear}
+			{item "garand" filled {cell 0 0}{user "hand_right"}}
+			{item "rifle" "ammo" 25 {cell 4 0}}
+			{item "rifle" "ammo" 25 {cell 5 0}}
+			{item "rifle" "ammo" 25 {cell 4 1}}
+			{item "rifle" "ammo" 25 {cell 5 1}}
+			{item "mgun" "ammo" 50 {cell 0 2}}
+			{item "bandage" 3 {cell 2 2}}
+			{item "m61" "grenade" {cell 4 2}}
+			{item "sandbag_kit" {cell 0 3}}
+			{item "helmet1_usa" {cell 2 3}{user "head"}}
+		}
+	}
+	{Inventory 0x8002
+		{box
+			{clear}
+			{item "repair_kit" 2 {cell 0 0}}
+			{item "dynamite" {cell 2 0}}
+			{item "can" filling "fuel" 60 {cell 4 0}}
+			{item "bullet75" "ap" "ammo" 52 {cell 0 2}}
+			{item "bullet75" "fg" "ammo" 45 {cell 0 3}}
+			{item "bullet75" "apcr" "ammo" 5 {cell 0 4}}
+			{item "browning" filled {cell 0 5}{user "mgun"}}
+			{item "hmgun" "ammo" 500 {cell 0 7}}
+			{item "mgun" "ammo" 2350 {cell 2 7}}
+		}
+	}
+	{Inventory 0x8004
+		{box
+			{clear}
+			{item "colt" filled {cell 0 0}{user "hand_right"}}
+			{item "pistol" "ammo" 100 {cell 2 0}}
+			{item "tankhelmet_usa" {cell 4 0}{user "head"}}
+		}
+	}
+	{Inventory 0x8006
+		{box
+			{clear}
+			{item "colt" filled {cell 0 0}{user "hand_right"}}
+			{item "pistol" "ammo" 100 {cell 2 0}}
+			{item "tankhelmet_usa" {cell 4 0}{user "head"}}
+		}
+	}
+	{Inventory 0x8008
+		{box
+			{clear}
+			{item "colt" filled {cell 0 0}{user "hand_right"}}
+			{item "pistol" "ammo" 100 {cell 2 0}}
+			{item "tankhelmet_usa" {cell 4 0}{user "head"}}
+		}
+	}
+	{Inventory 0x800a
+		{box
+			{clear}
+			{item "m3a" filled {cell 0 0}{user "hand_right"}}
+			{item "pistol" "ammo" 100 {cell 4 0}}
+			{item "tankhelmet_usa" {cell 4 1}{user "head"}}
+		}
+	}
+	{Inventory 0x800c
+		{box
+			{clear}
+			{item "colt" filled {cell 0 0}{user "hand_right"}}
+			{item "pistol" "ammo" 100 {cell 2 0}}
+			{item "tankhelmet_usa" {cell 4 0}{user "head"}}
+		}
+	}
+	{Brain 0x8002
+		{Properties
+			{look_around 0}
+		}
+	}
+	{Helpers
+		{reinforcements
+			{scoreTotal 0}
+			{scoreCurrent 0}
+		}
+		{triggers
+			{"walk"
+				{condition
+				}
+				{actions
+					{"waypoint"
+						{who
+							{type actor}
+							{actors
+								{player "0"}
+							}
+						}
+						{action
+							{type start}
+							{waypoint "0"}
+						}
+					}
+				}
+			}
+		}
+	}
+	{Fog 1}
+}
