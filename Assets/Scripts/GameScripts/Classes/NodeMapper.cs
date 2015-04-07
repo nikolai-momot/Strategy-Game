@@ -42,7 +42,7 @@ public class NodeMapper
 				tempVector = new Vector3(topCornerX + i*tileWidth, topCornerY - j*tileHeight, 0f );
 				Map[i, j] = new StratNode(tileHeight, tileWidth, tempVector, locations);
 				Map[i, j].setXY(i, j);
-				Debug.Log("Created MapNode at ("+i+","+j+")");
+				//Debug.Log("Created MapNode at ("+i+","+j+")");
 				 
 			}
 		}

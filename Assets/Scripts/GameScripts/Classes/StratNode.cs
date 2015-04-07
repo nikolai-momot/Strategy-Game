@@ -3,28 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class StratNode
-{
+public class StratNode {
 	private StratObj objective;
 	public float leftEdge, rightEdge, topEdge, bottomEdge;
 	private float height, width;
 	public Vector3 position;	//top-right point of the tile
 	public bool filled;
+	//public bool obstructed;
 	public int x, y;
 	public List<StratNode> neighbors;
 	public StratNode parent;
-
-	/*public MapNode ( float nodeHeight, float nodeWidth, Vector3 nodePosition)
-	{
-		filled = false;
-		height = nodeHeight;
-		width = nodeWidth;
-		position = nodePosition;
-		leftEdge = position.x;
-		rightEdge = position.x + width;
-		topEdge = position.y;
-		bottomEdge = position.y + height;
-	}*/
 
 	public StratNode ( float nodeHeight, float nodeWidth, Vector3 nodePosition, List<StratObj> locations)
 	{	
@@ -79,11 +67,5 @@ public class StratNode
 		x = newX;
 		y = newY;
 	}
-
-	/*public int CompareTo(StratNode that)
-	{
-		if (this.fValue >  that.fValue) return -1;
-		if (this.fValue == that.fValue) return 0;
-		return 1;
-	}*/
+	
 }

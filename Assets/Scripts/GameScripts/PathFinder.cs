@@ -1,22 +1,34 @@
 using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
 public class PathFinder {
 
+	public class HeuristicComparer : IComparer<int>  {
+		
+		// Calls CaseInsensitiveComparer.Compare with the parameters reversed. 
+		public int Compare( int x, int y )  {
+			if (x < y)
+				return -1;
+			else
+				return 1;
+		}
+		
+	}
+
 	public PathFinder(){}
 
 	public List<StratNode> FindPath( StratNode start, StratNode end ){
-		SortedDictionary<int, StratNode> openQueue = new SortedDictionary<int, StratNode> ();
-		SortedDictionary<int, StratNode> closedQueue = new SortedDictionary<int, StratNode> ();
-
+		SortedList<int, StratNode> openQueue = new SortedList<int, StratNode> ( new HeuristicComparer() );
+		SortedList<int, StratNode> closedQueue = new SortedList<int, StratNode> ( new HeuristicComparer() );
 
 
 		openQueue.Add( getFValue( start, start, end ), start );
 
-		while (openQueue.Values[0] != end) {
-			StratNode current = openQueue.Values[0];
+		while ( ( openQueue.First() ).Value != end ) {
+			StratNode current = ( openQueue.First() ).Value;
 			openQueue.RemoveAt(0);
 			closedQueue.Add( getFValue( start, current, end ), current );
 

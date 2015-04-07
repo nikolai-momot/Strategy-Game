@@ -9,12 +9,14 @@ public class VirtualGameManager : MonoBehaviour {
 		
 	public GameObject[] StrategicObjectives;
 	public List<StratObj> Locations;
+	//public List<StratNode> Obstacles;
 	public int xTiles = 10;
 	public int yTiles = 10;
 
 		
 	public void Start () {
 		Locations = new List<StratObj> ();
+		//Obstacles = new List<StratObj> ();
 
 		Base RedBase = new Base("Red HQ",StrategicObjectives[0]);
 		Locations.Add ( RedBase );
@@ -86,6 +88,10 @@ public class VirtualGameManager : MonoBehaviour {
 		NodeMapper map = new NodeMapper ( xTiles, yTiles, Locations );
 		PathFinder pathFinder = new PathFinder ();
 		List<StratNode> fullPath = pathFinder.FindPath (map.Map [0, 0], map.Map [xTiles - 1, yTiles - 1]);
+		int i = 1;
+		fullPath.ForEach (delegate( StratNode cell ) {
+			Debug.Log("Cell #"+i+" is at ( "+cell.x+", "+cell.y+")");
+		});
 	}
 	
 	// Update is called once per frame
