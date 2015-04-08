@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameScripts\PathFinder.cs">
+    <Files>
+      <File FileName="Assets\Scripts\GameScripts\VirtualGameManager.cs" Line="71" Column="3" />
+      <File FileName="Assets\Scripts\GameScripts\PathFinder.cs" Line="79" Column="32" />
+      <File FileName="Assets\Scripts\GameScripts\Classes\NodeMapper.cs" Line="39" Column="3" />
+      <File FileName="Assets\Scripts\GameScripts\Classes\Cell.cs" Line="79" Column="1" />
+      <File FileName="Assets\Scripts\GameScripts\Classes\Army.cs" Line="24" Column="3" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

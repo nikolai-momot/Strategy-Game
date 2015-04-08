@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{6A475F40-555B-DA55-E890-6411BD707857}</ProjectGuid>
+	<ProjectGuid>{49FE642E-10AB-DAF8-F49C-DE8F75E3C35F}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -49,10 +49,11 @@
      <Compile Include="Assets\Scripts\DataGatherer.cs" />
      <Compile Include="Assets\Scripts\DataManager.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Army.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Classes\Cell.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Classes\HeuristicComparer.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\NodeMapper.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Player.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Player_AI.cs" />
-     <Compile Include="Assets\Scripts\GameScripts\Classes\StratNode.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Base.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\City.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Outpost.cs" />

@@ -9,6 +9,7 @@ public class Army{
 	public string Name;
 	public ForceComp Force;
 	public StratObj currentTown; 
+	public Vector3 position;
 	int Wins, Losses, Morale;
 
 	public Army(string n,Base hq){
@@ -19,6 +20,8 @@ public class Army{
 		Force.AddVehicles(2);
 		
 		currentTown = hq; //Starts at the HQ
+		position = hq.MapPosition;	//Location
+
 		Wins = 0;
 		Losses = 0;
 		Morale = 100; //TODO: set a scale for morale or something
