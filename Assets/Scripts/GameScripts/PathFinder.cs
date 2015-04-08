@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 public class PathFinder {
 
-	//Custom comparer for heuristic values
 	public class HeuristicComparer : IComparer<int>  {
-		//Compares F values of StratNodes
-		public int Compare( int x, int y )  {	
+		
+		// Calls CaseInsensitiveComparer.Compare with the parameters reversed. 
+		public int Compare( int x, int y )  {
 			if (x < y)
 				return -1;
 			else
@@ -24,18 +24,15 @@ public class PathFinder {
 		SortedList<int, Cell> openQueue = new SortedList<int, Cell> ( new HeuristicComparer() );
 		SortedList<int, Cell> closedQueue = new SortedList<int, Cell> ( new HeuristicComparer() );
 
+
 		openQueue.Add( getFValue( start, start, end ), start );
 
-		while ( ( openQueue.FirstOrDefault() ).Value != end ) {
+		while ( ( openQueue.First() ).Value != end ) {
 			Cell current = ( openQueue.First() ).Value;
 			openQueue.RemoveAt(0);
 			closedQueue.Add( getFValue( start, current, end ), current );
 
 			foreach( Cell neighbor in current.neighbors ){
-
-				if(neighbor.content == Cell.contents.Obstructed )
-					continue;
-			
 				int cost = getFValue( start, neighbor, end );
 
 				if ( openQueue.ContainsValue(neighbor) && ( cost < getGValue( start, neighbor ) ) )
@@ -46,7 +43,6 @@ public class PathFinder {
 					neighbor.parent = current;
 					openQueue.Add( cost + getHValue(neighbor, end), neighbor );//A bit shacky around here
 				}
-				
 			}
 		}
 
@@ -59,9 +55,7 @@ public class PathFinder {
 			pathNode = pathNode.parent;
 			fullPath.Add( pathNode );
 		}
-
-		fullPath.Reverse ();
-
+        drawFullPath(fullPath);
 		return fullPath;
 
 		/*OPEN = priority queue containing START
@@ -85,17 +79,9 @@ public class PathFinder {
 		by following parent pointers*/
 	}
 
-	/*Unfinished -  Do not use*/
-	public void walkPath( Army army, Cell cell ){
-
-		//Instantiate some sort of object to track movement
-		if ( cell.parent != null )
-			Vector3.Lerp (army.position, cell.parent.position, Time.deltaTime);
-	}
-
 	public void drawFullPath( List<Cell> fullPath ){
 		foreach (Cell point in fullPath) {
-			Debug.DrawLine( point.position, point.parent.position, Color.blue);
+			Debug.DrawLine( point.position, point.parent.position, Color.blue,60);
 		}
 	}
 

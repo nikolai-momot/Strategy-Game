@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 public class Vehicle{
-	enum Seat_Type{Tank,Gun,Truck,Transport}; //Use this to choose which type of seats to fill
+	enum Veh_Type{Tank,Gun,Truck,Transport}; //Use this to choose which type of seats to fill
 	string Type; //"m4a1"
 	string HID; //0xa004
 	string MID; // "{MID x}"
@@ -12,7 +12,7 @@ public class Vehicle{
 	string MetaData; //Holds unmodified Game data...
 	string InventoryData; //Holds unmodified Inventory Data...
 	string Tag;
-	Seat_Type SType;
+    Veh_Type VType;
 
 	
 	public Vehicle(){ //Create Empty Vehicle Object...
@@ -22,7 +22,7 @@ public class Vehicle{
 		CrewMemebers = new Dictionary<string,Human>();
 		this.MetaData = "";
 		this.InventoryData = "";
-		SType = Seat_Type.Transport;
+        VType = Veh_Type.Transport;
 	}
 
 	public Vehicle(string meta){ //Create Empty Human Object...
@@ -42,14 +42,14 @@ public class Vehicle{
 		this.MetaData = meta;
 		this.InventoryData = ""; //don't have this info yet		
 		CrewMemebers = new Dictionary<string,Human>();
-		SType = Seat_Type.Tank; //TODO: know what type of vehicle it is
+        VType = Veh_Type.Tank; //TODO: know what type of vehicle it is
 	}
 	
 	public string CrewToLinkers(){
 		int i = 0;
 		string Link = "";
 		foreach (Human crew in CrewMemebers.Values) {
-			Link += "\n{Link " + crew.getHID() + " {" + this.HID + " \"" + SeatTypes.SeatList[(int)SType][i] + "\"}}"; /*{Link 0xa006 {0x8004 "gunner"}}*/
+            Link += "\n{Link " + crew.getHID() + " {" + this.HID + " \"" + SeatTypes.SeatList[(int)VType][i] + "\"}}"; /*{Link 0xa006 {0x8004 "gunner"}}*/
 			i++;
 		}
 		return Link;

@@ -9,68 +9,110 @@ public class VirtualGameManager : MonoBehaviour {
 		
 	public GameObject[] StrategicObjectives;
 	public List<StratObj> Locations;
-	public List<GameObject> Obstacles;
+	//public List<Cell> Obstacles;
 	public int xTiles = 10;
 	public int yTiles = 10;
+
+    private Object ArmyObj;
 
 		
 	public void Start () {
 		Locations = new List<StratObj> ();
-		Obstacles = new List<GameObject> ();
+        ArmyObj = Resources.Load("Prefabs/ArmyObj"); //Load the Prefab for instantiating
 
-		Obstacles.AddRange ( GameObject.FindGameObjectsWithTag( "Obstacle" ) );
-		Debug.Log ("There are "+Obstacles.Count+" Obstacles on screen");
+		//Obstacles = new List<StratObj> ();
 
-		Base RedBase = new Base("Red HQ",StrategicObjectives[0]);
+		Base RedBase = new Base("Red HQ",StrategicObjectives[0],1);
 		Locations.Add ( RedBase );
 
-		Base BlueBase = new Base("Blue HQ",StrategicObjectives[1]);
+		Base BlueBase = new Base("Blue HQ",StrategicObjectives[1],2);
 		Locations.Add ( BlueBase );
 
-		City City1 = new City("The City",StrategicObjectives[2]);
+		City City1 = new City("The City",StrategicObjectives[2],0);
 		Locations.Add ( City1 );
 
-		Outpost Outpost1 = new Outpost("FOB Red",StrategicObjectives[3]);
+        Outpost Outpost1 = new Outpost("FOB Red", StrategicObjectives[3], 0);
 		Locations.Add ( Outpost1 );
 
-		Outpost Outpost2 = new Outpost("FOB Blue",StrategicObjectives[4]);
+        Outpost Outpost2 = new Outpost("FOB Blue", StrategicObjectives[4], 0);
 		Locations.Add ( Outpost2 );
 
-		Town Town1 = new Town("Top Left Town",StrategicObjectives[5]);
+        Town Town1 = new Town("Top Left Town", StrategicObjectives[5], 0);
 		Locations.Add ( Town1 );
 
-		Town Town2 = new Town("Bottom Left Town",StrategicObjectives[6]);
+        Town Town2 = new Town("Bottom Left Town", StrategicObjectives[6], 0);
 		Locations.Add ( Town2 );
 
-		Town Town3 = new Town("Top Right Town",StrategicObjectives[7]);
+        Town Town3 = new Town("Top Right Town", StrategicObjectives[7], 0);
 		Locations.Add ( Town3 );
 
-		Town Town4 = new Town("Bottom Rght Town",StrategicObjectives[8]);		
+        Town Town4 = new Town("Bottom Rght Town", StrategicObjectives[8], 0);		
 		Locations.Add ( Town4 );
+
+		/*RedBase.DrawConnectionLines();
+		BlueBase.DrawConnectionLines();
+		Outpost1.DrawConnectionLines();
+		Outpost2.DrawConnectionLines();
+		City1.DrawConnectionLines();
+		Town1.DrawConnectionLines();
+		Town2.DrawConnectionLines();
+		Town3.DrawConnectionLines();
+		Town4.DrawConnectionLines();*/
+
+		Debug.Log(RedBase.ToString());
+		Debug.Log(BlueBase.ToString());
+		Debug.Log(Outpost1.ToString());
+		Debug.Log(Outpost2.ToString());
+		Debug.Log(Town1.ToString());
+		Debug.Log(Town2.ToString());
+		Debug.Log(Town3.ToString());
+		Debug.Log(Town4.ToString());
+		Debug.Log(City1.ToString());
 		
-		Player_AI RedPlayer = new Player_AI(0,"Red Player","THE REDS",RedBase);
-			RedPlayer.CreateNewArmy_GenerateName();
-			RedPlayer.CreateNewArmy_GenerateName();
+		Player_AI RedPlayer = new Player_AI(0,"Red Player","eng",RedBase);
+            RedPlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(RedPlayer.HQ.getMapObject()));
+            RedPlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(RedPlayer.HQ.getMapObject()));
 		
-		Player_AI BluePlayer = new Player_AI(1,"Blue Player","THE BLUES",BlueBase);
-			BluePlayer.CreateNewArmy_GenerateName();
-			BluePlayer.CreateNewArmy_GenerateName();
+		Player_AI BluePlayer = new Player_AI(1,"Blue Player","ger",BlueBase);
+            BluePlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(BluePlayer.HQ.getMapObject()));
+            BluePlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(BluePlayer.HQ.getMapObject()));		
+		
+		Debug.Log(RedPlayer.ToString());
+		Debug.Log(BluePlayer.ToString());
+		
+		foreach(Army a in RedPlayer.Armies){
+			Debug.Log(a.ToString());
+		}
+
+		foreach(Army a in BluePlayer.Armies){
+			Debug.Log(a.ToString());
+		}
 		
 		//Everything is in place for the AI to take over from here.
-		NodeMapper map = new NodeMapper ( xTiles, yTiles, Locations, Obstacles );
-
-
+		NodeMapper map = new NodeMapper ( xTiles, yTiles, Locations );
 		PathFinder pathFinder = new PathFinder ();
-		List<Cell> fullPath = pathFinder.FindPath (map.Map [0, 0], map.Map [4, 0]);
+		List<Cell> fullPath = pathFinder.FindPath (map.Map [0, 0], map.Map [3, 7]);
 		int i = 1;
-
 		fullPath.ForEach (delegate( Cell cell ) {
-			Debug.Log("Cell #"+i+" at ( "+cell.x+", "+cell.y+")"+" is "+cell.content.ToString());
-			i++;
+			Debug.Log("Cell #"+i+" is at ( "+cell.x+", "+cell.y+")");
 		});
 	}
+
+    public GameObject InstantiateArmyObjectAt(GameObject pos) {
+        return (GameObject)Instantiate(ArmyObj, pos.transform.position - Vector3.forward, Quaternion.identity);
+    }
 	
 	// Update is called once per frame
 	public void Update () {  }
+
+	/*public void ConnectEdges(){
+
+		Locations.ForEach (delegate( StratObj location ) {
+			foreach( StratObj point in Locations ){
+				if( location.ConnectedPoints.Contains(point.gObj) )
+					location.SetEdge(point);
+			}
+		});
+	}*/
 
 }
