@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Cell {
 	private StratObj objective;
 	public float leftEdge, rightEdge, topEdge, bottomEdge;
-	private float height, width;
+	public float height, width;
 	public Vector3 position;	//top-right point of the tile
 	public bool filled;
 	//public bool obstructed;
@@ -31,7 +31,7 @@ public class Cell {
 
 		//Checking if a Strategic Objective is located inside the node
 		locations.ForEach (delegate( StratObj location ) {
-			if( containsObjective(location) ){
+			if( containsVector(location.MapPosition) ){
 				setObjective(location);
 				this.filled = true;
 				return;
@@ -44,8 +44,8 @@ public class Cell {
 
 	}
 
-	public bool containsObjective( StratObj location ){
-		if ( (location.MapPosition.x >= leftEdge && location.MapPosition.x < rightEdge) && (location.MapPosition.y >= topEdge && location.MapPosition.y < bottomEdge) )
+	public bool containsVector( Vector3 location ){
+		if ( (location.x >= leftEdge && location.x < rightEdge) && (location.y >= topEdge && location.y < bottomEdge) )
 			return true;
 
 		return false;

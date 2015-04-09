@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\DataGatherer.cs" />
      <Compile Include="Assets\Scripts\DataManager.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Army.cs" />
@@ -68,6 +69,7 @@
      <Compile Include="Assets\Scripts\Points.cs" />
      <Compile Include="Assets\Scripts\UnitData\Crew.cs" />
      <Compile Include="Assets\Scripts\UnitData\ForceComp.cs" />
+     <Compile Include="Assets\Scripts\UnitData\General.cs" />
      <Compile Include="Assets\Scripts\UnitData\Human.cs" />
      <Compile Include="Assets\Scripts\UnitData\MapData.cs" />
      <Compile Include="Assets\Scripts\UnitData\SeatTypes.cs" />

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class PathFinder {
 
+	public Cell[,] cellMap;
+
 	public class HeuristicComparer : IComparer<int>  {
 		
 		// Calls CaseInsensitiveComparer.Compare with the parameters reversed. 
@@ -18,7 +20,9 @@ public class PathFinder {
 		
 	}
 
-	public PathFinder(){}
+	public PathFinder( Cell[,] newMap){
+		cellMap = newMap;
+	}
 
 	public List<Cell> FindPath( Cell start, Cell end ){
 		SortedList<int, Cell> openQueue = new SortedList<int, Cell> ( new HeuristicComparer() );
@@ -79,10 +83,44 @@ public class PathFinder {
 		by following parent pointers*/
 	}
 
-	public void drawFullPath( List<Cell> fullPath ){
-		foreach (Cell point in fullPath) {
-			Debug.DrawLine( point.position, point.parent.position, Color.blue,60);
+	public Cell cellFromVector( Vector3 objLocation ){
+		foreach (Cell cell in cellMap) {
+			if ( cell.containsVector( objLocation ) )
+				return cell;
 		}
+
+		return null;
+	}
+
+	public void drawFullPath( List<Cell> cellPath ){
+		List<Vector3> vectorPath = cellToVectors ( cellPath, true );
+		Vector3[] pathArray = vectorPath.ToArray ();
+		for (int i = 0; i < pathArray.Length-1; i++) {
+			Debug.DrawLine( pathArray[i], pathArray[i+1], Color.blue, Mathf.Infinity );
+		}
+	}
+
+	public List<Vector3> cellToVectors( List<Cell> fullPath, bool adjustVector ) {
+		float	height	= fullPath.First().height, 
+				width	= fullPath.First().width;
+
+		List<Vector3> vectorPath = new List<Vector3> ();
+
+		fullPath.ForEach(delegate(Cell cell) {
+			if(adjustVector)
+				vectorPath.Add( cornerToCenter( cell.position, height, width ) );
+			else
+				vectorPath.Add( cell.position );
+		});
+
+		return vectorPath;
+	}
+
+	public Vector3 cornerToCenter( Vector3 cornerPoint, float height, float width ){
+		float 	newX = cornerPoint.x + ( width / 2 ),
+				newY = cornerPoint.y - ( height / 2 );
+
+		return new Vector3(newX, newY, 0f);
 	}
 
 	private int getFValue( Cell start, Cell current, Cell end ){

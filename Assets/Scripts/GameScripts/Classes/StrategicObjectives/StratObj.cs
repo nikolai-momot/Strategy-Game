@@ -27,7 +27,7 @@ public class StratObj{
 	public StratObj(string n,GameObject p,int OwnerID){
 		Name = n; //Name always set
 		gObj = p;
-        p.tag = "Objective";
+        //p.tag = "Objective";
         MapPosition = p.transform.position;
         this.OwnerID = OwnerID;
    	}

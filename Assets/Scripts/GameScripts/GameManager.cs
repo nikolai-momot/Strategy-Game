@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour {
         }  */
 
         map = new NodeMapper(xTiles, yTiles, Locations);
-        pathFinder = new PathFinder();
+        pathFinder = new PathFinder(map.Map);
         List<Cell> fullPath = pathFinder.FindPath(map.Map[0, 0], map.Map[3, 7]);
         int n = 1;
         fullPath.ForEach(delegate(Cell cell) {

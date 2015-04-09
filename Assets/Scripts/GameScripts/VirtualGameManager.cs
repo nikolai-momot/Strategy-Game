@@ -90,12 +90,14 @@ public class VirtualGameManager : MonoBehaviour {
 		
 		//Everything is in place for the AI to take over from here.
 		NodeMapper map = new NodeMapper ( xTiles, yTiles, Locations );
-		PathFinder pathFinder = new PathFinder ();
+		PathFinder pathFinder = new PathFinder (map.Map);
 		List<Cell> fullPath = pathFinder.FindPath (map.Map [0, 0], map.Map [3, 7]);
 		int i = 1;
 		fullPath.ForEach (delegate( Cell cell ) {
 			Debug.Log("Cell #"+i+" is at ( "+cell.x+", "+cell.y+")");
 		});
+
+		pathFinder.drawFullPath (fullPath);
 	}
 
     public GameObject InstantiateArmyObjectAt(GameObject pos) {
@@ -105,14 +107,5 @@ public class VirtualGameManager : MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {  }
 
-	/*public void ConnectEdges(){
-
-		Locations.ForEach (delegate( StratObj location ) {
-			foreach( StratObj point in Locations ){
-				if( location.ConnectedPoints.Contains(point.gObj) )
-					location.SetEdge(point);
-			}
-		});
-	}*/
 
 }
