@@ -14,7 +14,9 @@ public class StratObj{
 
 	public string Name;
 	public int OwnerID; //Keep track of the owner
-	public int DefenceLevel; //Scale of 1-5
+    public List<Army> OccupyingArmies; //Armies at this town
+    public ForceComp Garrison; //Garrison acts like and army, but just defends the town
+	public int DefenceLevel; //1-100
 	public int SupplyLevel; //Probably just the raw supply number
 	public int StrategicValue; //For AI use
 	public GameObject MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
@@ -23,11 +25,13 @@ public class StratObj{
 	public StratObj(){}	//Need this for inheritance
 	
 	//Contructor will take the name, the gameObject(Location) and the enum type
-	public StratObj(string n,GameObject p){
+	public StratObj(string n,GameObject p,int OwnerID){
 		Name = n; //Name always set
 		MapPosition = p;
+        this.OwnerID = OwnerID;
 		ConnectedPoints = new Dictionary<string,StratObj>();
 	}
+
 
 	public Dictionary<string,StratObj> GetConnectedPoints(){
 		Dictionary<string,StratObj> ConnectedPoints = new Dictionary<string, StratObj> ();
@@ -52,16 +56,20 @@ public class StratObj{
 		if(OwnerID==null){ //Unoccupied
 			return SupplyLevel + 5*DefenceLevel + 2*ConnectedPoints.Count;
 		}else{ //Occupied
-			return SupplyLevel - 5*DefenceLevel - 2*ConnectedPoints.Count;
+			return SupplyLevel - 5*DefenceLevel + 2*ConnectedPoints.Count;
 		}
 	}
+
+    public void MoneyToDefences(int Money){
+        this.DefenceLevel += Money / getUpgradeDefenceCost();
+    }
+    public void MoneyToSupply(int Money){
+        this.SupplyLevel += Money / getUpgradeSupplyCost();
+    }
 	
 	//Setters
 	public void setName(string n){Name=n;}
-	public void incDefenceLevel(){DefenceLevel++;}
-	public void incSupplyLevel(){SupplyLevel++;}
-	public void decDefenceLevel(){DefenceLevel--;}
-	public void decSupplyLevel(){SupplyLevel--;}
+	
 
 	//Getters
 	public string getName(){return Name;}
@@ -69,5 +77,7 @@ public class StratObj{
 	public int getSupplyLevel(){return SupplyLevel;}
 	public GameObject getMapObject(){return MapPosition;}
 	public Transform getMapPosition(){return MapPosition.transform;}
-	
+    public int getUpgradeDefenceCost() { return 1; }
+    public int getUpgradeSupplyCost() { return 1; }
+
 }

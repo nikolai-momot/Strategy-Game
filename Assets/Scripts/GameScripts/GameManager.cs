@@ -6,5 +6,6 @@ using System.Collections.Generic;
  * Basically tells each player when to take their turn.
  * */
 public class GameManager : MonoBehaviour {
-		
+
+    
 }

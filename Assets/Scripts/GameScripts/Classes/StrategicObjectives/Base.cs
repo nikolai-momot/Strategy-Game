@@ -6,8 +6,8 @@ public class Base : StratObj {
 	
 	public string TownsInSupplyLine;
 	
-	public Base(string n,GameObject p):base(n,p){
-		DefenceLevel = 4;
+	public Base(string n,GameObject p,int OwnerID):base(n,p,OwnerID){
+		DefenceLevel = 75;
 		SupplyLevel = 150;
 		TownsInSupplyLine = "";
 	}
@@ -19,6 +19,19 @@ public class Base : StratObj {
 		foreach (Town t in ConnectedTowns.Values) {
 		}*/
 	}
+
+    public override void MoneyToDefences(int Money) {
+        this.DefenceLevel += Money / getUpgradeDefenceCost();
+    }
+    public override void MoneyToSupply(int Money) {
+        this.SupplyLevel += Money / getUpgradeSupplyCost();
+    }
+    public override int getUpgradeDefenceCost() {
+        return (int)((1/500)*Mathf.Pow(DefenceLevel,2.2f));
+    }
+    public override int getUpgradeSupplyCost() {
+        return (int)((1 / 500) * Mathf.Pow(SupplyLevel, 2.2f));
+    }
 	
 	public override string ToString ()
 	{

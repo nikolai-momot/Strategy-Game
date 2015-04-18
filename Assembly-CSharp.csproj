@@ -39,36 +39,39 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>D:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>D:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\DataGatherer.cs" />
      <Compile Include="Assets\Scripts\DataManager.cs" />
-     <Compile Include="Assets\Scripts\GameScripts\Army.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Army.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Player.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Player_AI.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Base.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\City.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Outpost.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\StratObj.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Town.cs" />
      <Compile Include="Assets\Scripts\GameScripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\PathFinder.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\VirtualGameManager.cs" />
      <Compile Include="Assets\Scripts\MapSwitcher.cs" />
      <Compile Include="Assets\Scripts\MissionGenerator.cs" />
+     <Compile Include="Assets\Scripts\Navigator.cs" />
      <Compile Include="Assets\Scripts\UnitData\Crew.cs" />
      <Compile Include="Assets\Scripts\UnitData\ForceComp.cs" />
+     <Compile Include="Assets\Scripts\UnitData\General.cs" />
      <Compile Include="Assets\Scripts\UnitData\Human.cs" />
      <Compile Include="Assets\Scripts\UnitData\MapData.cs" />
      <Compile Include="Assets\Scripts\UnitData\SeatTypes.cs" />
      <Compile Include="Assets\Scripts\UnitData\Squad.cs" />
      <Compile Include="Assets\Scripts\UnitData\Vehicle.cs" />
-     <Compile Include="Assets\Scrpts\Navigator.cs" />
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
