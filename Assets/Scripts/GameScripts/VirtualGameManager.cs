@@ -1,55 +1,71 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 /* Should have the same function as game manager, 
  * but won't have visual aspects. Game plays through text
  */
 public class VirtualGameManager : MonoBehaviour {
 		
-	public GameObject[] StrategicObjectives;
-	public List<StratObj> Locations;
-	//public List<Cell> Obstacles;
-	public int xTiles = 10;
-	public int yTiles = 10;
-
-    private Object ArmyObj;
-
+		public GameObject[] StrategicObjectives;
 		
-	public void Start () {
-		Locations = new List<StratObj> ();
-        ArmyObj = Resources.Load("Prefabs/ArmyObj"); //Load the Prefab for instantiating
-
-		//Obstacles = new List<StratObj> ();
-
-		Base RedBase = new Base("Red HQ",StrategicObjectives[0],1);
-		Locations.Add ( RedBase );
-
-		Base BlueBase = new Base("Blue HQ",StrategicObjectives[1],2);
-		Locations.Add ( BlueBase );
-
-		City City1 = new City("The City",StrategicObjectives[2],0);
-		Locations.Add ( City1 );
-
-        Outpost Outpost1 = new Outpost("FOB Red", StrategicObjectives[3], 0);
-		Locations.Add ( Outpost1 );
-
-        Outpost Outpost2 = new Outpost("FOB Blue", StrategicObjectives[4], 0);
-		Locations.Add ( Outpost2 );
-
-        Town Town1 = new Town("Top Left Town", StrategicObjectives[5], 0);
-		Locations.Add ( Town1 );
-
-        Town Town2 = new Town("Bottom Left Town", StrategicObjectives[6], 0);
-		Locations.Add ( Town2 );
-
-        Town Town3 = new Town("Top Right Town", StrategicObjectives[7], 0);
-		Locations.Add ( Town3 );
-
-        Town Town4 = new Town("Bottom Rght Town", StrategicObjectives[8], 0);		
-		Locations.Add ( Town4 );
-
-		/*RedBase.DrawConnectionLines();
+	void Start () {
+		Base RedBase = new Base("Red HQ",StrategicObjectives[0]);
+		Base BlueBase = new Base("Blue HQ",StrategicObjectives[1]);
+		City City1 = new City("The City",StrategicObjectives[2]);	
+		Outpost Outpost1 = new Outpost("FOB Red",StrategicObjectives[3]);
+		Outpost Outpost2 = new Outpost("FOB Blue",StrategicObjectives[4]);
+		Town Town1 = new Town("Top Left Town",StrategicObjectives[5]);
+		Town Town2 = new Town("Bottom Left Town",StrategicObjectives[6]);
+		Town Town3 = new Town("Top Right Town",StrategicObjectives[7]);
+		Town Town4 = new Town("Bottom Rght Town",StrategicObjectives[8]);		
+		
+		//Make Connections, this won't be manual in the real game
+		RedBase.AddConnectedPoint(Outpost1);
+		RedBase.AddConnectedPoint(Town1);
+		RedBase.AddConnectedPoint(Town2);
+		
+		BlueBase.AddConnectedPoint(Outpost2);
+		BlueBase.AddConnectedPoint(Town3);
+		BlueBase.AddConnectedPoint(Town4);
+		
+		Town1.AddConnectedPoint(RedBase);		
+		Town1.AddConnectedPoint(Outpost1);
+		Town1.AddConnectedPoint(City1);
+		Town1.AddConnectedPoint(Town3);
+		
+		Town2.AddConnectedPoint(RedBase);
+		Town2.AddConnectedPoint(Outpost1);
+		Town2.AddConnectedPoint(City1);
+		Town2.AddConnectedPoint(Town4);
+		
+		Town3.AddConnectedPoint(BlueBase);
+		Town3.AddConnectedPoint(City1);
+		Town3.AddConnectedPoint(Outpost2);
+		Town3.AddConnectedPoint(Town1);
+		
+		Town4.AddConnectedPoint(BlueBase);
+		Town4.AddConnectedPoint(City1);
+		Town4.AddConnectedPoint(Outpost2);
+		Town4.AddConnectedPoint(Town2);
+		
+		Outpost1.AddConnectedPoint(Town1);
+		Outpost1.AddConnectedPoint(Town2);
+		Outpost1.AddConnectedPoint(City1);
+		Outpost1.AddConnectedPoint(RedBase);
+		
+		Outpost2.AddConnectedPoint(Town3);
+		Outpost2.AddConnectedPoint(Town4);
+		Outpost2.AddConnectedPoint(City1);
+		Outpost2.AddConnectedPoint(BlueBase);
+		
+		City1.AddConnectedPoint(Outpost1);
+		City1.AddConnectedPoint(Outpost2);
+		City1.AddConnectedPoint(Town1);
+		City1.AddConnectedPoint(Town2);
+		City1.AddConnectedPoint(Town3);
+		City1.AddConnectedPoint(Town4);	
+		
+		RedBase.DrawConnectionLines();
 		BlueBase.DrawConnectionLines();
 		Outpost1.DrawConnectionLines();
 		Outpost2.DrawConnectionLines();
@@ -57,8 +73,8 @@ public class VirtualGameManager : MonoBehaviour {
 		Town1.DrawConnectionLines();
 		Town2.DrawConnectionLines();
 		Town3.DrawConnectionLines();
-		Town4.DrawConnectionLines();*/
-
+		Town4.DrawConnectionLines();
+		
 		Debug.Log(RedBase.ToString());
 		Debug.Log(BlueBase.ToString());
 		Debug.Log(Outpost1.ToString());
@@ -69,13 +85,13 @@ public class VirtualGameManager : MonoBehaviour {
 		Debug.Log(Town4.ToString());
 		Debug.Log(City1.ToString());
 		
-		Player_AI RedPlayer = new Player_AI(0,"Red Player","eng",RedBase);
-            RedPlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(RedPlayer.HQ.getMapObject()));
-            RedPlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(RedPlayer.HQ.getMapObject()));
+		Player_AI RedPlayer = new Player_AI(0,"Red Player","THE REDS",RedBase);
+			RedPlayer.CreateNewArmy_GenerateName();
+			RedPlayer.CreateNewArmy_GenerateName();
 		
-		Player_AI BluePlayer = new Player_AI(1,"Blue Player","ger",BlueBase);
-            BluePlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(BluePlayer.HQ.getMapObject()));
-            BluePlayer.CreateNewArmy_GenerateName(InstantiateArmyObjectAt(BluePlayer.HQ.getMapObject()));		
+		Player_AI BluePlayer = new Player_AI(1,"Blue Player","THE BLUES",BlueBase);
+			BluePlayer.CreateNewArmy_GenerateName();
+			BluePlayer.CreateNewArmy_GenerateName();		
 		
 		Debug.Log(RedPlayer.ToString());
 		Debug.Log(BluePlayer.ToString());
@@ -83,29 +99,16 @@ public class VirtualGameManager : MonoBehaviour {
 		foreach(Army a in RedPlayer.Armies){
 			Debug.Log(a.ToString());
 		}
-
 		foreach(Army a in BluePlayer.Armies){
 			Debug.Log(a.ToString());
 		}
 		
 		//Everything is in place for the AI to take over from here.
-		NodeMapper map = new NodeMapper ( xTiles, yTiles, Locations );
-		PathFinder pathFinder = new PathFinder (map.Map);
-		List<Cell> fullPath = pathFinder.FindPath (map.Map [0, 0], map.Map [3, 7]);
-		int i = 1;
-		fullPath.ForEach (delegate( Cell cell ) {
-			Debug.Log("Cell #"+i+" is at ( "+cell.x+", "+cell.y+")");
-		});
-
-		pathFinder.drawFullPath (fullPath);
+		
 	}
-
-    public GameObject InstantiateArmyObjectAt(GameObject pos) {
-        return (GameObject)Instantiate(ArmyObj, pos.transform.position - Vector3.forward, Quaternion.identity);
-    }
 	
 	// Update is called once per frame
-	public void Update () {  }
-
-
+	void Update () {
+	
+	}
 }

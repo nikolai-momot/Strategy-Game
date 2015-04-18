@@ -14,47 +14,60 @@ public class StratObj{
 
 	public string Name;
 	public int OwnerID; //Keep track of the owner
-    public List<Army> OccupyingArmies; //Armies at this town
-    public ForceComp Garrison; //Garrison acts like and army, but just defends the town
-	public int DefenceLevel; //1-100
+	public int DefenceLevel; //Scale of 1-5
 	public int SupplyLevel; //Probably just the raw supply number
-    public Vector3 MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
-    public GameObject gObj;
+	public int StrategicValue; //For AI use
+	public GameObject MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
+	private Dictionary<string,StratObj> ConnectedPoints; //The key being the Point's name. Get this list from TownPosition game object's info
 
 	public StratObj(){}	//Need this for inheritance
 	
 	//Contructor will take the name, the gameObject(Location) and the enum type
-	public StratObj(string n,GameObject p,int OwnerID){
+	public StratObj(string n,GameObject p){
 		Name = n; //Name always set
-		gObj = p;
-        //p.tag = "Objective";
-        MapPosition = p.transform.position;
-        this.OwnerID = OwnerID;
-   	}
-
-	
-	public int getStrategicValueForAI(Vector3 AI_Base){
-		return (int)(MapPosition - AI_Base).magnitude;
+		MapPosition = p;
+		ConnectedPoints = new Dictionary<string,StratObj>();
 	}
 
-    public void MoneyToDefences(int Money){
-        this.DefenceLevel += Money / getUpgradeDefenceCost();
-    }
-    public void MoneyToSupply(int Money){
-        this.SupplyLevel += Money / getUpgradeSupplyCost();
-    }
+	public Dictionary<string,StratObj> GetConnectedPoints(){
+		Dictionary<string,StratObj> ConnectedPoints = new Dictionary<string, StratObj> ();
+		Town[] towns = MapPosition.GetComponent<Town[]> (); //Fetch array of connected towns
+		foreach (Town t in towns) {
+			ConnectedPoints.Add(t.getName(),t);
+		}
+		return ConnectedPoints;
+	}
+	
+	public void AddConnectedPoint(StratObj obj){
+		this.ConnectedPoints.Add(obj.getName(),obj);
+	}
+	
+	public void DrawConnectionLines(){
+		foreach(StratObj pos in ConnectedPoints.Values){
+			Debug.DrawRay(MapPosition.transform.position,-((MapPosition.transform.position) - pos.MapPosition.transform.position),Color.green,60.0f);
+		}
+	}
+	
+	public int EstimateStrategicValue(){
+		if(OwnerID==null){ //Unoccupied
+			return SupplyLevel + 5*DefenceLevel + 2*ConnectedPoints.Count;
+		}else{ //Occupied
+			return SupplyLevel - 5*DefenceLevel - 2*ConnectedPoints.Count;
+		}
+	}
 	
 	//Setters
 	public void setName(string n){Name=n;}
-	
+	public void incDefenceLevel(){DefenceLevel++;}
+	public void incSupplyLevel(){SupplyLevel++;}
+	public void decDefenceLevel(){DefenceLevel--;}
+	public void decSupplyLevel(){SupplyLevel--;}
 
 	//Getters
 	public string getName(){return Name;}
 	public int getDefenceLevel(){return DefenceLevel;}
 	public int getSupplyLevel(){return SupplyLevel;}
-	public GameObject getMapObject(){return gObj;}
-	public Vector3 getMapPosition(){return MapPosition;}
-    public int getUpgradeDefenceCost() { return 1; }
-    public int getUpgradeSupplyCost() { return 1; }
-
+	public GameObject getMapObject(){return MapPosition;}
+	public Transform getMapPosition(){return MapPosition.transform;}
+	
 }
