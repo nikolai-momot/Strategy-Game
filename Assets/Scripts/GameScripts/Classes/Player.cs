@@ -15,7 +15,7 @@ public class Player{
 	public Base HQ;
 	public List<Army> Armies; //List so they can get more than just the starting Armies
 	public List<StratObj> Objectives;
-    public bool Victorious = false;
+    public bool finishedTurn = false;
 	
 	public Player(){
 		
@@ -29,17 +29,22 @@ public class Player{
 		Armies = new List<Army>();
         Objectives = new List<StratObj>();
 	}
-	
-	public void CreateNewArmy(string n){
-		Armies.Add(new Army(n,HQ,this.ID)); 
+
+    public void TakeTurn() {
+
+    }
+
+    public void CreateNewArmy(string n, GameObject ArmyObj) {
+		Armies.Add(new Army(n,ArmyObj,this.ID));
+        ArmyObj.GetComponentInChildren<TextMesh>().text = n;
 	}
 	
-	public void CreateNewArmy_GenerateName(){
+	public void CreateNewArmy_GenerateName(GameObject ArmyObj){
 		int num = Random.Range(1,600);
 		string n = "";
 		if(num%100 == 13){ //Special Case where number ends with a 3, but has a th instead of rd
 			n+= num + "th Division";
-			Armies.Add(new Army(n,HQ,this.ID));
+			Armies.Add(new Army(n,ArmyObj,this.ID));
 			return;
 		}		
 		switch(num%10){
@@ -56,15 +61,11 @@ public class Player{
 			n+=num + "th Division";
 			break;				
 		}
-		Armies.Add(new Army(n,HQ,this.ID));
+        Armies.Add(new Army(n, ArmyObj, this.ID));
+        ArmyObj.GetComponentInChildren<TextMesh>().text = n;
 	}
 
-    public void ResetAllArmyActions() {
-        //When an army moves or spends money, it will use it's actions. They get reset at the beginning of each turn
-        foreach (Army a in Armies) {
-            a.setActions(1);
-        }
-    }
+    
     
     public int GetRevenue() {
         int income=0;
@@ -87,8 +88,9 @@ public class Player{
         return upkeep;
     }
 
-    public void CollectIncome() {
+    public void CollectIncome() {        
         Money += GetProfit();
+        Debug.Log(Name + ": Collecting " + GetProfit() + ". I now have: " + Money);
     }
 	
 	public override string ToString ()

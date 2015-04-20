@@ -10,84 +10,100 @@ public class Player_AI : Player{
 	public int FocusOnSupplies; //Focus on Upgrading Supply generating buildings
 	public int Riskiness; //The theshold to take risks. Less Risky = Will wait for better odds to attack
 
+    public Queue<Army> ArmiesWaitingToMove;
+    public Queue<Battle> BattlesWaitingToResolve;
+
+    
 	public Player_AI(int id,string name,string country,Base hq):base(id,name,country,hq){	
 	//Calls Player Constructor
-        Aggresivness = Random.Range(1,100);
+        /*Aggresivness = Random.Range(1,100);
         Defencivness = Random.Range(1, 100);
-        FocusOnSupplies = Random.Range(1, 100);
+        FocusOnSupplies = Random.Range(1, 100);*/
+        Aggresivness = 100;
+        Defencivness = 50;
+        FocusOnSupplies = 0;
+
+        ArmiesWaitingToMove = new Queue<Army>();
+        BattlesWaitingToResolve = new Queue<Battle>();
 	}
 	
 	//Turn Sequence
-	public void TakeTurn(){
+	public new void TakeTurn(){
+        Debug.Log(Name + ": Taking my turn...");
         CollectIncome();
         MoveArmies();
-		SpendMoney();		
+        SpendMoneyOnTowns();		
 		EndTurn();
 	}
 
     /*All towns and armies will request money to spend, they will get what they request unless the Player doesn't have enough money.
      *In which case, they Player will give the appropriate proportion of it's money to be spent.*/
-    public int SpendMoney() {
+    public int SpendMoneyOnTowns() {
+        Debug.Log(Name + ": Spending money on StratObjs...");
 		//Look at money, Strategic points, Armies. 
 		//Make decisions about where to spend money
         int totalRequestedMoney = 0;
         int totalSpent=0;
         int[] ObjSpendingBudget = new int[Objectives.Count]; //The Each StratObj's budget this turn
-        int[] ArmySpendingBudget = new int[Armies.Count]; //Each Armies Spending budget
         
         for (int i = 0; i < ObjSpendingBudget.Length; i++) { //Ask all towns how much money they need
             ObjSpendingBudget[i] = getRequestedSpendingMoney(Objectives[i]);
         }
-        for (int i = 0; i < ArmySpendingBudget.Length; i++) { //Ask all armies how much money they need
-            if (Armies[i].getActions() > 0) {//If army hasn't moved
-                ArmySpendingBudget[i] = getRequestedSpendingMoney(Armies[i]);
-            } else {
-                ArmySpendingBudget[i] = 0;
-            }
-        }
-        totalRequestedMoney = SumOfArray(ObjSpendingBudget) + SumOfArray(ArmySpendingBudget);
+        totalRequestedMoney = SumOfArray(ObjSpendingBudget);
 
         if (totalRequestedMoney <= Money) {//We have enough money to give out all that was requested!
             for (int i = 0; i < ObjSpendingBudget.Length; i++) { //Give all towns requested money
                 totalSpent += SpendOnTownUpgrades(ObjSpendingBudget[i],Objectives[i]);
             }
-            for (int i = 0; i < ArmySpendingBudget.Length; i++) { //Give all armies requested money
-                totalSpent += SpendOnRecruitment(ArmySpendingBudget[i],Armies[i]);
-            }
         }else{//Don't have enough money, We'll have to scale down what we give out :(
             for (int i = 0; i < ObjSpendingBudget.Length; i++) { //Give out scaled down money
                 totalSpent += SpendOnTownUpgrades(CalculateAvailableMoney(ObjSpendingBudget[i],SumOfArray(ObjSpendingBudget)),Objectives[i]);
             }
-            for (int i = 0; i < ObjSpendingBudget.Length; i++) { 
-                totalSpent += SpendOnRecruitment(CalculateAvailableMoney(ArmySpendingBudget[i],SumOfArray(ArmySpendingBudget)),Armies[i]);
-            }
         }
+        Debug.Log(Name + ": Spent "+totalSpent+" on StratObjs.");
         return totalSpent;
     }
 	
 	public void MoveArmies(){
+        Debug.Log(Name + ": Moving My armies...");
 		//Any Armies that weren't upgraded can now choose where to move
-        foreach (Army a in Armies) {
-            if (a.getActions() > 0) { //If Army has actions
-                if (MoveArmy(a)) { //If the Army wants to move
-                    if (AttackDes(a) >= MoveDes(a)) {
-                        /*Chooses to attack, look for best target*/
-                        a.setActions(0);
+        foreach (Army a in Armies) {            
+            int RecDes = RecruitDes(a);
+            int AtkDes = AttackDes(a);
+            Debug.Log(Name + ": Army " + a.getName() + " RecDes = " + RecDes + " AtkDes = " +  AtkDes);
+            if (AtkDes > RecDes) {
+                Army HTVArmy = getHTVArmy(a);
+                StratObj HTVStratObj = getHTVStratObj();
+                Debug.Log(Name + ": Choosing to move: " + a.getName() + " || Best Army Target: " + HTVArmy.getName() + "(" + HTVArmy.getStrategicValueForAI(a) + ") Best StratObj target: " + HTVStratObj.getName()+ "(" + HTVStratObj.getStrategicValueForAI(this) + ")");
+                if (HTVArmy.getStrategicValueForAI(a) > HTVStratObj.getStrategicValueForAI(this)) {
+                    Battle b = a.AttackTarget(HTVArmy);
+                    if (b != null) {
+                        ArmiesWaitingToMove.Enqueue(a);
+                        BattlesWaitingToResolve.Enqueue(b);
                     } else {
-                        /*Chooses to move, look for best loaction*/
-                        a.setActions(0);
-                    }
+                        ArmiesWaitingToMove.Enqueue(a);
+                    }                    
+                } else {
+                    Battle b = a.AttackTarget(HTVStratObj);
+                    if (b != null) {
+                        ArmiesWaitingToMove.Enqueue(a);
+                        BattlesWaitingToResolve.Enqueue(b);
+                    } else {
+                        ArmiesWaitingToMove.Enqueue(a);
+                    }  
                 }
+            }else{
+                /*Chooses to Recruit, needs to buy units or move to a town/buy units*/
             }
         }
-	}
+    }
 	
 	public void EndTurn(){
-		//Tell the Manager we're done	
-        ResetAllArmyActions();
+		//Tell the Manager we're done
+        Debug.Log(Name + ": Ending my turn");
+        finishedTurn = true;
 	}
-
-
+    
     /* Desirability(Des) Functions */
     //Town Management
     public int getTownVulerability(StratObj town) {
@@ -110,37 +126,36 @@ public class Player_AI : Player{
         request = (int)((-0.5f*(town.getDefenceLevel()) + 50) + (-0.5f*(town.getSupplyLevel()) + 50));
         return request; 
     }
-    //Army Management
-    public bool MoveArmy(Army army) { //Return true if the army wants to move, false if it wants to recruit units
-        bool Move;
-        if (MoveDes(army) >= RecruitDes(army)) {
-            Move = true;
-        } else {
-            Move = false;
+
+    //Army Movement / Attacking 
+    public int AttackDes(Army a) {
+        return 50 + Aggresivness;
+    }
+    public Army getHTVArmy(Army a) {
+        List<Army> EnemyArmies = GameManager.GetAllEnemyArmies(ID);
+        int hvt_index = 0;
+        for (int i = 0; i < EnemyArmies.Count; i++) {
+            if (EnemyArmies[hvt_index].getStrategicValueForAI(a) < EnemyArmies[i].getStrategicValueForAI(a)) {
+                hvt_index = i;
+            }
         }
-        return Move; 
+        return EnemyArmies[hvt_index];
     }
-    //Army Movement / Attacking    
-    public int MoveTargetDes(StratObj target) { //Run all available move targets through this, to get the best one
-        /* See how far it is from friendly positions, maybe? */
-        return 0; 
+    public StratObj getHTVStratObj() {
+        int hvt_index = GameManager.Locations.Count - 1;
+        for (int i = 0; i < GameManager.Locations.Count; i++) {
+            if (GameManager.Locations[i].OwnerID != this.ID) {
+                if (GameManager.Locations[hvt_index].getStrategicValueForAI(this) < GameManager.Locations[i].getStrategicValueForAI(this)) {
+                    hvt_index = i;
+                }
+            }
+        }
+        return GameManager.Locations[hvt_index];
     }
-    public int AttackTargetDes(Army target) { //Run all available attack targets through this, to get the best one
-        /*Run a strength estimate to guess chances of winning*/
-        return 0; 
-    }
-    public int AttackDes(Army army) { //How much the army wants to attack
-        /*Look at all attack options in the area, to see if there's a good target*/
-        return 0; 
-    }
-    public int MoveDes(Army army) { //How much the army wants to move
-        /*Probably if the options for attacking don't look good, should move away from them?*/
-        return 0; 
-    }   
   
     //Army Recruitment    
     public int RecruitDes(Army army) { //How much the Army wants to be reinforced
-        return (100 + Defencivness) - army.Force.GetSoldierCount() - 4 * army.Force.GetVehicleCount(); 
+        return (50 + Defencivness) - army.Force.GetSoldierCount() - 4 * army.Force.GetVehicleCount(); 
     }
     public int getRequestedSpendingMoney(Army army) {//Asks the Army how much money it wants to spend on recruitment
         return (100-army.Force.GetSoldierCount()) + (10 - army.Force.GetVehicleCount()); 
@@ -172,8 +187,10 @@ public class Player_AI : Player{
         Debug.Log(army.Name + " spent $" + Spent + " on recruitment, Attained: " + NumberofInfantry + " infantry and " + NumberofVehicles + " vehicles.");
         return Spent; 
     }
-    
-   
+
+    public bool isBusy() {
+        return (ArmiesWaitingToMove.Count + BattlesWaitingToResolve.Count)>0;
+    }
 
     public int CalculateAvailableMoney(int Request, int TotalRequested) {
     /*Takes the percentage of the total money requested, and gives that percentage of the available money*/

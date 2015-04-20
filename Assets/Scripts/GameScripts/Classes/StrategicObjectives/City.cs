@@ -7,19 +7,19 @@ public class City : StratObj {
 	
 	public City(string n,GameObject p,int OwnerID):base(n,p,OwnerID){
 		DefenceLevel = 50;
-		SupplyLevel = 250;
+		SupplyLevel = 50;
 	}
 
-    public override void MoneyToDefences(int Money) {
+    public new void MoneyToDefences(int Money) {
         this.DefenceLevel += Money / getUpgradeDefenceCost();
     }
-    public override void MoneyToSupply(int Money) {
+    public new void MoneyToSupply(int Money) {
         this.SupplyLevel += Money / getUpgradeSupplyCost();
     }
-    public override int getUpgradeDefenceCost() {
+    public new int getUpgradeDefenceCost() {
         return (int)((1 / 500) * Mathf.Pow(DefenceLevel, 2.1f));
     }
-    public override int getUpgradeSupplyCost() {
+    public new int getUpgradeSupplyCost() {
         return (int)((1 / 500) * Mathf.Pow(SupplyLevel, 2.1f));
     }
 	public override string ToString ()

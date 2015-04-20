@@ -13,21 +13,22 @@ public class Cell {
 	public int x, y;
 	public List<Cell> neighbors;
 	public Cell parent;
+	public int[] heat;
 
-	public Cell ( float nodeHeight, float nodeWidth, Vector3 nodePosition, List<StratObj> locations)
+	public Cell ( float nodeHeight, float nodeWidth, Vector3 nodePosition, List<StratObj> locations, int players)
 	{	
-		neighbors = new List<Cell>();
-
+		this.neighbors = new List<Cell>();
+		this.heat = new int[players];
 		//Recording hight, width and location of node
-		height = nodeHeight;
-		width = nodeWidth;
-		position = nodePosition;
+		this.height = nodeHeight;
+		this.width = nodeWidth;
+		this.position = nodePosition;
 
 		//Determining the edges of the node
-		leftEdge = position.x;
-		rightEdge = position.x + width;
-		topEdge = position.y;
-		bottomEdge = position.y + height;
+		this.leftEdge = position.x;
+		this.rightEdge = position.x + width;
+		this.topEdge = position.y;
+		this.bottomEdge = position.y + height;
 
 		//Checking if a Strategic Objective is located inside the node
 		locations.ForEach (delegate( StratObj location ) {
@@ -40,7 +41,7 @@ public class Cell {
 		});
 
 		//if no Strategic objective is located inside the node, record it as empty
-		filled = false;
+		this.filled = false;
 
 	}
 
@@ -66,6 +67,13 @@ public class Cell {
 	public void setXY( int newX, int newY ){
 		x = newX;
 		y = newY;
+	}
+
+	public override string ToString(){
+		if(this.filled)
+			return "Cell at ("+this.x+", "+this.y+") is filled";
+		else
+			return "Cell at ("+this.x+", "+this.y+")";
 	}
 	
 }

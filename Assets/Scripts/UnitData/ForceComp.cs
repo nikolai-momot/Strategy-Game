@@ -32,21 +32,35 @@ public class ForceComp {
 
     /* TODO FUNCTINONS */
 
-    public void RemoveSoldiers(int n) { /*Removes N soldiers, only good if soldiers aren't unique...*/ }
+    public void RemoveSoldiers(int n) { /*Removes N soldiers, only good if soldiers aren't unique...*/
+        int i = 0;
+        List<string> keys = new List<string>();
+        foreach (string key in Infantry.Keys) {
+            if (i >= n) break;
+            keys.Add(key);
+            i++;
+        }
+        foreach (string k in keys) {
+            Infantry.Remove(k);
+        }
+    }
     public void RemoveSoldiers(List<Human> casualties) { /*Removes all from the list, good for removinig specific soldiers*/ }
     /*Same stuff for vehicles*/
-    public void RemoveVehicles(int n) { }
+    public void RemoveVehicles(int n) {
+        int i = 0;
+        List<string> keys = new List<string>();
+        foreach (string key in Vehicles.Keys) {
+            if (i >= n) break;
+            keys.Add(key);
+            i++;
+        }
+        foreach (string k in keys) {
+            Vehicles.Remove(k);
+        }
+    }
     public void RemoveVehicles(List<Vehicle> casualties) { }
 
-    public int CalculateRange() { /*Will look at the units in the force and calculate the number of spaces they can move
-                                   *Something like; Every vehicle can hold 10 infantry, so if the infantry can all mount
-                                   *the vehicles, they can move 2 spaces instead of one.
-                                   *Having Wounded troops will factor into this as well. Maybe you'll have to decide to 
-                                   *leave them behind?*/
-        return 1;
-    }    
-
-    /*******************/
+   /*******************/
 	
 	public void AddSoldier(){ //Create Empty soldier.
 		this.Infantry.Add ("0x"+(Infantry.Count + 1),new Human());

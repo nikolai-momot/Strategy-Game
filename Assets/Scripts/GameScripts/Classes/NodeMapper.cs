@@ -7,11 +7,13 @@ public class NodeMapper
 	public int xTiles, yTiles;
 	public List<StratObj> locations;
     public Cell[,] Map;
+	private int playerCount;
 
-	public NodeMapper ( int x, int y, List<StratObj>  objLocations ){
+	public NodeMapper ( int x, int y, List<StratObj>  objLocations, int players ){
 		xTiles = x;
 		yTiles = y;
 		locations = objLocations;
+		playerCount = players;
 
 		GameObject background = GameObject.Find ("Background");
 
@@ -40,8 +42,13 @@ public class NodeMapper
 		for (int i = 0; i < xTiles; i++) {
 			for(int j = 0; j < yTiles; j++){
 				tempVector = new Vector3(topCornerX + i*tileWidth, topCornerY - j*tileHeight, 0f );
-				Map[i, j] = new Cell(tileHeight, tileWidth, tempVector, locations);
+				Map[i, j] = new Cell(tileHeight, tileWidth, tempVector, locations, playerCount);
 				Map[i, j].setXY(i, j);
+				if(Map[i,j].filled){
+					StratObj tempObj = Map[i,j].getObjective();
+					tempObj.x = i;
+					tempObj.y = j;
+				}
 				//Debug.Log("Created MapNode at ("+i+","+j+")");
 				 
 			}

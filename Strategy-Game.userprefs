@@ -1,6 +1,32 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameScripts\Classes\StrategicObjectives\StratObj.cs">
+    <Files>
+      <File FileName="Assets\Scripts\GameScripts\Classes\NodeMapper.cs" Line="29" Column="2" />
+      <File FileName="Assets\Scripts\GameScripts\HeatMap.cs" Line="165" Column="159" />
+      <File FileName="Assets\Scripts\GameScripts\GameManager.cs" Line="111" Column="98" />
+      <File FileName="Assets\Scripts\GameScripts\Classes\Cell.cs" Line="38" Column="12" />
+      <File FileName="Assets\Scripts\GameScripts\Classes\StrategicObjectives\StratObj.cs" Line="23" Column="69" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Scripts" expanded="True">
+              <Node name="GameScripts" expanded="True">
+                <Node name="Classes" expanded="True">
+                  <Node name="StrategicObjectives" expanded="True">
+                    <Node name="StratObj.cs" selected="True" />
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="UnitData" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

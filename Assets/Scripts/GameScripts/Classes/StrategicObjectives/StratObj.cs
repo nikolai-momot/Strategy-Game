@@ -14,50 +14,32 @@ public class StratObj{
 
 	public string Name;
 	public int OwnerID; //Keep track of the owner
-    public List<Army> OccupyingArmies; //Armies at this town
+    public Army OccupyingArmy; //Armies at this town
     public ForceComp Garrison; //Garrison acts like and army, but just defends the town
 	public int DefenceLevel; //1-100
 	public int SupplyLevel; //Probably just the raw supply number
-	public int StrategicValue; //For AI use
-	public GameObject MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
-	private Dictionary<string,StratObj> ConnectedPoints; //The key being the Point's name. Get this list from TownPosition game object's info
+    public Vector3 MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
+    public GameObject gObj;
+	public int x, y;		//cell map coordinates	<<<<<<<<ADDED COORDINATES 
 
 	public StratObj(){}	//Need this for inheritance
 	
 	//Contructor will take the name, the gameObject(Location) and the enum type
 	public StratObj(string n,GameObject p,int OwnerID){
 		Name = n; //Name always set
-		MapPosition = p;
+		gObj = p;
+        p.tag = "Objective";
+        MapPosition = p.transform.position;
         this.OwnerID = OwnerID;
-		ConnectedPoints = new Dictionary<string,StratObj>();
-	}
-
-
-	public Dictionary<string,StratObj> GetConnectedPoints(){
-		Dictionary<string,StratObj> ConnectedPoints = new Dictionary<string, StratObj> ();
-		Town[] towns = MapPosition.GetComponent<Town[]> (); //Fetch array of connected towns
-		foreach (Town t in towns) {
-			ConnectedPoints.Add(t.getName(),t);
-		}
-		return ConnectedPoints;
-	}
+        OccupyingArmy = null;
+        Garrison = new ForceComp();
+   	}
 	
-	public void AddConnectedPoint(StratObj obj){
-		this.ConnectedPoints.Add(obj.getName(),obj);
-	}
-	
-	public void DrawConnectionLines(){
-		foreach(StratObj pos in ConnectedPoints.Values){
-			Debug.DrawRay(MapPosition.transform.position,-((MapPosition.transform.position) - pos.MapPosition.transform.position),Color.green,60.0f);
-		}
-	}
-	
-	public int EstimateStrategicValue(){
-		if(OwnerID==null){ //Unoccupied
-			return SupplyLevel + 5*DefenceLevel + 2*ConnectedPoints.Count;
-		}else{ //Occupied
-			return SupplyLevel - 5*DefenceLevel + 2*ConnectedPoints.Count;
-		}
+	public int getStrategicValueForAI(Player_AI player){
+        int dist_from_base = (int)(MapPosition - player.HQ.getMapPosition()).magnitude;
+        int SupplyValue = getSupplyLevel()/dist_from_base + player.FocusOnSupplies;
+        int DefenceValue = getDefenceLevel()/dist_from_base + player.Aggresivness;
+        return 100 - dist_from_base;
 	}
 
     public void MoneyToDefences(int Money){
@@ -69,15 +51,54 @@ public class StratObj{
 	
 	//Setters
 	public void setName(string n){Name=n;}
-	
+    public void setOwner(int id) { OwnerID = id; }
+    public void setArmy(Army a) {
+        OccupyingArmy = a;
+        a.ArmyObject.transform.position = this.gObj.transform.position + Vector3.down;
+        a.ArmyObject.transform.localScale = a.ArmyObject.transform.localScale / 2;
+        setOwner(a.OwnerID);
+    }
+    public void clearArmy() {         
+        OccupyingArmy.ArmyObject.transform.position = this.gObj.transform.position - Vector3.down;
+        OccupyingArmy.ArmyObject.transform.localScale = OccupyingArmy.ArmyObject.transform.localScale * 2;
+        OccupyingArmy = null;
+    }
+
+    public void TakeLosses(int n) {
+        Debug.Log(OccupyingArmy.Force.getName() + " in "+ Name +" taking " + n + " losses!");
+        if (n >= OccupyingArmy.Force.GetSoldierCount() + OccupyingArmy.Force.GetVehicleCount()) {
+            OccupyingArmy.Destroy();
+        } else {
+            if (n <= OccupyingArmy.Force.GetSoldierCount()) {
+                OccupyingArmy.Force.RemoveSoldiers(n);
+            } else {
+                OccupyingArmy.Force.RemoveSoldiers(n);
+                OccupyingArmy.Force.RemoveVehicles(n);
+            }
+        }
+        if ((OccupyingArmy.Force.GetSoldierCount() + OccupyingArmy.Force.GetVehicleCount()) < 1) {
+            OccupyingArmy.Destroy();
+        }
+    }
 
 	//Getters
-	public string getName(){return Name;}
+	public string getName(){return Name + " ("+OwnerID+")";}
 	public int getDefenceLevel(){return DefenceLevel;}
 	public int getSupplyLevel(){return SupplyLevel;}
-	public GameObject getMapObject(){return MapPosition;}
-	public Transform getMapPosition(){return MapPosition.transform;}
+	public GameObject getMapObject(){return gObj;}
+	public Vector3 getMapPosition(){return MapPosition;}
     public int getUpgradeDefenceCost() { return 1; }
     public int getUpgradeSupplyCost() { return 1; }
+    public Army getArmy() { return OccupyingArmy; }
 
+    public int getStrength() {
+        int str = 0;
+        if(OccupyingArmy != null){
+        str += OccupyingArmy.getStrength() + Garrison.EstimateStrength();
+        } else {
+            str += Garrison.EstimateStrength(); ;
+        }
+        if (str == 0)return 0;        
+        return str + DefenceLevel;
+    }
 }
