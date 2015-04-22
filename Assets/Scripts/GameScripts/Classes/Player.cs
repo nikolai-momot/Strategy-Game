@@ -18,6 +18,10 @@ public class Player{
     public bool finishedTurn = false;
 
     private int UnitID = -1; //Used for recruiting new units, give them unique IDs
+
+    public Queue<Army> ArmiesWaitingToMove;
+    public Queue<Army> ArmiesWaitingToEnter;
+    public Queue<Battle> BattlesWaitingToResolve;
 	
 	public Player(){
 		
@@ -32,6 +36,9 @@ public class Player{
         Objectives = new List<StratObj>();
         Objectives.Add(hq);
         hq.gObj.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Flags/flag_" + country);
+        ArmiesWaitingToMove = new Queue<Army>();
+        ArmiesWaitingToEnter = new Queue<Army>();
+        BattlesWaitingToResolve = new Queue<Battle>();
 	}
 
     public void TakeTurn() {
@@ -67,7 +74,17 @@ public class Player{
         Armies.Add(new Army(n, ArmyObj, this));
 	}
 
-    
+    /*For retreating Ar*/
+    public StratObj getClosestOwnedObj(Army army) {
+        int closest_index = 0;
+        for (int i = 0; i < Objectives.Count; i++) {
+            if (Vector3.Distance(army.ArmyObject.transform.position, Objectives[closest_index].gObj.transform.position) > Vector3.Distance(army.ArmyObject.transform.position, Objectives[i].gObj.transform.position)) {
+                if (Objectives[i].OccupyingArmy == null) closest_index = i;
+            }
+        }
+        Debug.Log("Found closest point to be: " + Objectives[closest_index].getName());
+        return Objectives[closest_index];
+    }    
     
     public int GetRevenue() {
         int income=0;
@@ -109,6 +126,10 @@ public class Player{
     public void setHQ(Base hq) {
         HQ = hq;
     }
+    public Vector3 getHQPos() {
+        return HQ.getMapPosition();
+    }
+
     	
 	public override string ToString ()
 	{

@@ -1,0 +1,20 @@
+Final Project || April 22nd, 2015
+Nikolai Momot - 103821049
+Ryan Lawson - 103821049
+=========================================================================================
+Summary:
+We created strategy game that pits two to five AI player against each other.The players - each starting with a base, two units and some money - must use their intellect to conquer nearby towns, recruit units and defeat the other players. The game is designed in such a way that a new map can be created in minutes: dragging a base prefab onto the map adds a player to the game, extra objectives(cities, towns, etc) can be added by placing their respcted prefabs on the game map. 
+******************************************************************************************
+Implemented by Nikolai:
+
+Heat Map - By toggling with the H key you can display the threat given off by the players, represented by a gradient from yellow to orange to red
+
+PathFinding - The map is devided into a grid of cells, invisible to the observer, that the AI use to navigate to where they want to go using an A* search algorithm
+******************************************************************************************
+Implemented by Ryan:
+
+Economy - 
+
+Decision Making - 
+
+Central Architecture - 

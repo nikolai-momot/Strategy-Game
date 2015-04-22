@@ -20,17 +20,17 @@ public class Base : StratObj {
 		}*/
 	}
 
-    public new void MoneyToDefences(int Money) {
-        this.DefenceLevel += Money / getUpgradeDefenceCost();
+    public new void MoneyToDefences(float Money) {
+        this.DefenceLevel += (int)(Money / getUpgradeDefenceCost());
     }
-    public new void MoneyToSupply(int Money) {
-        this.SupplyLevel += Money / getUpgradeSupplyCost();
+    public new void MoneyToSupply(float Money) {
+        this.SupplyLevel += (int)(Money / getUpgradeSupplyCost());
     }
-    public new int getUpgradeDefenceCost() {
-        return (int)((1/500)*Mathf.Pow(DefenceLevel,2.2f));
+    public float getUpgradeDefenceCost() {
+        return ((1/500)*Mathf.Pow(DefenceLevel,2.2f));
     }
-    public new int getUpgradeSupplyCost() {
-        return (int)((1 / 500) * Mathf.Pow(SupplyLevel, 2.2f));
+    public float getUpgradeSupplyCost() {
+        return ((1 / 500) * Mathf.Pow(SupplyLevel, 2.2f));
     }
 	
 	public override string ToString ()

@@ -32,16 +32,22 @@ public class Battle {
                       "\n" + defender.getName() + " rolled " + def);
 
             if (atk > def) { //attacker wins
+                /*Rolls for Losses on both sides, winner takes less losses*/
                 attacker.AddWin();
-                if(def > 0)attacker.TakeLosses(Random.Range(0, def/3));
-            } else { //defender wins
                 defender.AddLoss();
-                defender.TakeLosses(Random.Range(0, atk/3));
                 defender.Retreat();
+                attacker.TakeLosses(Random.Range(0, def / 2)); //Winner
+                defender.TakeLosses(Random.Range(0, atk / 3)); //Loser
+                
+            } else { //defender wins
+                defender.AddWin();
+                attacker.AddLoss();
+                attacker.Retreat();
+                attacker.TakeLosses(Random.Range(0, def / 2)); //Loser
+                defender.TakeLosses(Random.Range(0, atk / 3)); //Winner                
             }
         } else { //Is an Objective Defending
-            if (attacker.getOwnerID() == Objective.getOwnerID()) { return; } //Someone else took it first...
-
+            if (attacker.getOwnerID() == Objective.getOwnerID()) { return; } //Someone else took it first...           
             int atk = Random.Range(attacker.getStrength() / 3, attacker.getStrength());
             int def = Random.Range(Objective.getStrength() / 2, Objective.getStrength());
 
@@ -51,14 +57,24 @@ public class Battle {
                       "\n" + attacker.getName() + " rolled " + atk +
                       "\n" + Objective.getName() + " rolled " + def);
 
-            if (atk > def) { //attacker wins
-                attacker.AddWin();
-                if (def > 0) attacker.TakeLosses(Random.Range(0, def / 3));
+            if (atk > def) { //attacker wins                
+                if (def > 0) {
+                    attacker.TakeLosses(Random.Range(0, def / 3)); //Winner                    
+                }                
+                if (Objective.OccupyingArmy != null) {
+                    attacker.AddWin();
+                    Objective.OccupyingArmy.AddLoss();                   
+                    Objective.TakeLosses(Random.Range(0, atk / 3)); //Loser                                      
+                    if(Objective.OccupyingArmy != null) //Will be null if it was destroyed by losses
+                        Objective.OccupyingArmy.Retreat();
+                }
                 attacker.Enter(Objective);
             } else { //defender wins
-                Objective.OccupyingArmy.AddLoss();
-                Objective.TakeLosses(Random.Range(0, atk / 3));
-                Objective.OccupyingArmy.Retreat();
+                Objective.OccupyingArmy.AddWin();
+                attacker.AddLoss();
+                attacker.Retreat();
+                Objective.TakeLosses(Random.Range(0, atk / 4)); //Winner
+                attacker.TakeLosses(Random.Range(0, def)); //Loser                
             }
         }
     }

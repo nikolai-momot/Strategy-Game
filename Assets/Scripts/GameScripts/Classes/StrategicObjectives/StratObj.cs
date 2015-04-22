@@ -18,11 +18,11 @@ public class StratObj{
     public ForceComp Garrison; //Garrison acts like and army, but just defends the town
 	public int DefenceLevel; //1-100
 	public int SupplyLevel; //Probably just the raw supply number
-    public Vector3 MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
     public GameObject gObj;
     private TextMesh[] TextMeshes;
     public int x, y;		//cell map coordinates
-
+	
+	public Vector3 MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
 	public StratObj(){}	//Need this for inheritance
 	
 	//Contructor will take the name, the gameObject(Location) and the enum type
@@ -30,11 +30,10 @@ public class StratObj{
 		Name = n; //Name always set
 		gObj = p;
         p.tag = "Objective";
-        MapPosition = p.transform.position;
         this.Owner = Owner;
         OccupyingArmy = null;
         Garrison = new ForceComp();
-
+		MapPosition = p.transform.position;
         TextMeshes = gObj.GetComponentsInChildren<TextMesh>();
         TextMeshes[0].text = n;
         TextMeshes[1].text = "";
@@ -47,11 +46,11 @@ public class StratObj{
         return (100+player.FocusOnSupplies) - dist_from_base;
 	}
 
-    public void MoneyToDefences(int Money){
-        this.DefenceLevel += Money / getUpgradeDefenceCost();
+    public void MoneyToDefences(float Money){
+        this.DefenceLevel += (int)Money / getUpgradeDefenceCost();
     }
-    public void MoneyToSupply(int Money){
-        this.SupplyLevel += Money / getUpgradeSupplyCost();
+    public void MoneyToSupply(float Money) {
+        this.SupplyLevel += (int)Money / getUpgradeSupplyCost();
     }
 
     public void AddSoldiersToGarrison(int n) {
@@ -79,19 +78,9 @@ public class StratObj{
     }
 
     public void TakeLosses(int n) {
-        Debug.Log(OccupyingArmy.Force.getName() + " in "+ Name +" taking " + n + " losses!");
-        if (n >= OccupyingArmy.Force.GetSoldierCount() + OccupyingArmy.Force.GetVehicleCount()) {
-            OccupyingArmy.Destroy();
-        } else {
-            if (n <= OccupyingArmy.Force.GetSoldierCount()) {
-                OccupyingArmy.Force.RemoveSoldiers(n);
-            } else {
-                OccupyingArmy.Force.RemoveSoldiers(n);
-                OccupyingArmy.Force.RemoveVehicles(n);
-            }
-        }
-        if ((OccupyingArmy.Force.GetSoldierCount() + OccupyingArmy.Force.GetVehicleCount()) < 1) {
-            OccupyingArmy.Destroy();
+        if (OccupyingArmy != null) {
+            Debug.Log(OccupyingArmy.Force.getName() + " in " + Name + " taking " + n + " losses!");
+            OccupyingArmy.TakeLosses(n);
         }
     }
 
@@ -108,7 +97,7 @@ public class StratObj{
 	public int getDefenceLevel(){return DefenceLevel;}
 	public int getSupplyLevel(){return SupplyLevel;}
 	public GameObject getMapObject(){return gObj;}
-	public Vector3 getMapPosition(){return MapPosition;}
+	public Vector3 getMapPosition(){return gObj.transform.position;}
     public int getUpgradeDefenceCost() { return 1; }
     public int getUpgradeSupplyCost() { return 1; }
     public Army getArmy() { return OccupyingArmy; }
@@ -126,6 +115,6 @@ public class StratObj{
             str += Garrison.EstimateStrength(); ;
         }
         if (str == 0)return 0;        
-        return str + DefenceLevel;
+        return str + 5*DefenceLevel;
     }
 }

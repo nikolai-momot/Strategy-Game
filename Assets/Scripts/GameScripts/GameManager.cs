@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour {
     public static HeatMap heatmap;
     public static float MoveSpeed = 10.0f;
 
-    public int xTiles = 25;
-    public int yTiles = 25;
+    public int xTiles = 50;
+    public int yTiles = 50;
 
     public static Player_AI[] players;
     private GameObject[] bases;
@@ -29,13 +29,15 @@ public class GameManager : MonoBehaviour {
     private GameObject[] outposts;
     private GameObject[] towns;
     
-	private static bool heatMapVisible;
+    private static bool heatMapVisible;
     private int turnSeq = 0;
 
     public static List<StratObj> Locations;
+    public static int InfantryCost = 3;
+    public static int VehicleCost = 10;
 
     private Object ArmyObj;
-    public static Object TargetInd,AddVictoryInd,AddLossInd,AddUnitsInd,LoseUnitsInd;
+    public static Object TargetInd,AddVictoryInd,AddLossInd,AddUnitsInd,LoseUnitsInd,RetreatInd;
 
     private string[] Countries = new string[] { "eng","ger","usa","jap","rus" };
 
@@ -51,7 +53,8 @@ public class GameManager : MonoBehaviour {
         AddVictoryInd = Resources.Load("Prefabs/Victory");
         AddLossInd = Resources.Load("Prefabs/Defeat"); 
         AddUnitsInd = Resources.Load("Prefabs/AddUnit"); 
-        LoseUnitsInd = Resources.Load("Prefabs/LoseUnit"); 
+        LoseUnitsInd = Resources.Load("Prefabs/LoseUnit");
+        RetreatInd = Resources.Load("Prefabs/Retreat");
 
         players = new Player_AI[bases.Length]; //One Player per Base
 
@@ -95,13 +98,13 @@ public class GameManager : MonoBehaviour {
                 Locations.Add(new Town("Town " + Alphabet[i], towns[i], null));
                 towns[i].GetComponentInChildren<TextMesh>().text = "Town " + Alphabet[i];
             }
-        }
+        }        
+        
+        map         = new NodeMapper(xTiles, yTiles, Locations, players.Length);
+        pathFinder  = new PathFinder(map.Map);
+        heatmap     = new HeatMap(map.Map, Locations, players, xTiles, yTiles);
 
-        map			= new NodeMapper(xTiles, yTiles, Locations, players.Length);
-        pathFinder	= new PathFinder(map.Map);
-        heatmap		= new HeatMap(map.Map, Locations, players, xTiles, yTiles);
-
-		heatMapVisible	= false;
+        heatMapVisible  = false;
 
         //Everything is in place for the AI to take over from here.
         players[0].TakeTurn();
@@ -109,24 +112,25 @@ public class GameManager : MonoBehaviour {
         UpdateObjInfo();
     }
 
-	public void showMap(){
-		heatMapVisible = !heatMapVisible;
-		heatmap.show (heatMapVisible);
-	}
+    public void showMap(){
+        heatMapVisible = !heatMapVisible;
+        heatmap.show (heatMapVisible);
+    }
 
     public static List<Army> GetAllEnemyArmies(int ID) {
         List<Army> enemyArmies = new List<Army>();
         for (int i = 0; i < players.Length; i++) {
             if (players[i].ID != ID) {
                 foreach (Army e in players[i].Armies) {
-                    enemyArmies.Add(e);
+                    if(e.ArmyObject != null)
+                     enemyArmies.Add(e);
                 }
             }
         }
-        return enemyArmies;
+            return enemyArmies;
     }
 
-    /*Iinstatiation functions, Visual indicators*/
+    /*Instatiation functions, Visual indicators*/
     public GameObject InstantiateArmyObjectAt(GameObject pos) {
         return (GameObject)Instantiate(ArmyObj, pos.transform.position, Quaternion.identity);
     }
@@ -145,6 +149,9 @@ public class GameManager : MonoBehaviour {
     public static void InstantiateLoseUnitAt(Vector3 pos) {
         Instantiate(LoseUnitsInd, pos - Vector3.forward, Quaternion.identity);
     }
+    public static void InstantiateRetreatIndAt(Vector3 pos) {
+        Instantiate(RetreatInd, pos - Vector3.forward, Quaternion.identity);
+    }
 
 
     public void NextTurn() {
@@ -153,24 +160,35 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Update() {
-
 		if (Input.GetKeyDown (KeyCode.H))
 			this.showMap ();
 
+        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            if(Time.timeScale <= 9.5f)
+                Time.timeScale += 0.5f;
+        } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            if(Time.timeScale >= 0.5f)
+                Time.timeScale -= 0.5f;
+        }
+
         if (players[turnSeq].finishedTurn && !players[turnSeq].isBusy()) {
-            Debug.Log("GameManager: Next turn!");
+            Debug.Log("GameManager: Next turn!");            
+            //CleanUpArmies(); //Not implemented yet, Armies will just teleport back to base when detroyed
+            CleanUpTargets();
             UpdateObjInfo();
             UpdateObjNames();
-            CleanUpArmies();
-            CleanUpTargets();
             players[turnSeq].finishedTurn = false;
+            NextTurn();
 
 			if(heatMapVisible)
 				heatmap.UpdateHeatMap(turnSeq);
-            
-			NextTurn();
+
             players[turnSeq].TakeTurn();
         } else {
+
+			if(heatMapVisible)
+				heatmap.UpdateHeatMap(turnSeq);
+
             MoveArmiesOnMap();//Checks Armies to see if they have movement paths Queued up
             MoveArmiesOnMapToEnter();
             ResolvePendingBattles();
@@ -197,10 +215,12 @@ public class GameManager : MonoBehaviour {
     }
     public void CleanUpArmies() {
         foreach (Player p in players) {
-            for(int i =0;i<p.Armies.Count;i++){
-                if (p.Armies[i].isDefeated()) {
-                    p.Armies.Remove(p.Armies[i]);
-                    p.Armies[i].ArmyObject.SetActive(false);
+            if (p.Armies.Count != 0) {
+                for (int i = 0; i < p.Armies.Count; i++) {
+                    if (p.Armies[i].isDefeated()) {
+                        p.Armies.Remove(p.Armies[i]);
+                        GameObject.Destroy(p.Armies[i].ArmyObject);
+                    }
                 }
             }
         }
@@ -214,7 +234,8 @@ public class GameManager : MonoBehaviour {
     public void MoveArmiesOnMap() {
         if (players[turnSeq].ArmiesWaitingToMove.Count > 0) {
             Army a = players[turnSeq].ArmiesWaitingToMove.Peek();
-            if (a.MovingPath.Count > 0) {
+            if (a.MovingPath.Count > 0 ) {
+                if (a.ArmyObject == null) players[turnSeq].ArmiesWaitingToMove.Dequeue();
                 a.ArmyObject.transform.Translate((a.MovingPath.Peek() - a.ArmyObject.transform.position).normalized * Time.deltaTime * ArmyMoveSpeed);
                 if ((a.MovingPath.Peek() - a.ArmyObject.transform.position).magnitude < 0.1) {
                     a.MovingPath.Dequeue();
@@ -227,8 +248,7 @@ public class GameManager : MonoBehaviour {
     public void MoveArmiesOnMapToEnter() {
         if (players[turnSeq].ArmiesWaitingToEnter.Count > 0) {
             Army a = players[turnSeq].ArmiesWaitingToEnter.Peek();
-            if (a.MovingPath.Count > 0) {
-                
+            if (a.MovingPath.Count > 0) {                
                 a.ArmyObject.transform.Translate((a.MovingPath.Peek() - a.ArmyObject.transform.position).normalized * Time.deltaTime * ArmyMoveSpeed);
                 if ((a.MovingPath.Peek() - a.ArmyObject.transform.position).magnitude < 0.1) {
                     a.MovingPath.Dequeue();

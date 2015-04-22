@@ -30,6 +30,29 @@ public class NodeMapper
 		return;
 	}
 
+	//Find the neighboring tile with the lowest heat  
+	public Cell lowestHeat( Cell cell, int id, int players){
+		Cell[] neighbors 	= cell.neighbors.ToArray();	//Array of neighboring cells
+		Cell coolest 		= neighbors[0];		//Cell with the least heat, temporary value
+		int lowest			= coolest.heat[0];	//Lowest heat value, temporary value
+
+		for (int i = 0; i < players; i++) {
+			//Check every player except the current one
+			if(i==id)
+				continue;
+
+			for(int j = 0; j < neighbors.Length; j++){
+				//Reset coolest tile and lowest heat value if a lower one is found
+				if( neighbors[j].heat[i] < lowest ){
+					coolest = neighbors[j];
+					lowest	= coolest.heat[i];
+				}
+			}
+		}
+
+		return coolest;
+	}
+
 	//Fill map with cells
 	public void FillMap ( float tileHeight, float tileWidth, MeshRenderer background){
 		Vector3 center = background.bounds.center,		//Center of background

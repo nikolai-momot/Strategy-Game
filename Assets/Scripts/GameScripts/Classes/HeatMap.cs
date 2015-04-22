@@ -94,10 +94,14 @@ public class HeatMap{
 
 	// Set the renderer color of each tile
     public void setMapColors(int id) {
-		for (int i = 0; i < this.xTiles; i++) {
-			for (int j = 0; j < this.yTiles; j++) {
-				this.setTileColor(this.map[i, j], id, this.map[i, j].heat[id]);
-				this.rendMap[i,j].material.color = (Color)this.map[i, j].color;
+		for (int k = 0; k < players.Length; k++) {
+			if (id == k)
+				continue;
+			for (int i = 0; i < this.xTiles; i++) {
+				for (int j = 0; j < this.yTiles; j++) {
+					this.setTileColor (this.map [i, j], id, this.map [i, j].heat [id]);
+					this.rendMap [i, j].material.color = (Color)this.map [i, j].color;
+				}
 			}
 		}
     }
