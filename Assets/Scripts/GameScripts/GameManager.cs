@@ -12,11 +12,12 @@ public class GameManager : MonoBehaviour {
     public bool GenerateNamesForTowns = false;
     public bool GenerateNamesForCities = false;
     public bool GenerateNamesForOutPosts = false;
+    public int StartingArmies = 2;
     public float ArmyMoveSpeed = 1.0f;
 
     public static PathFinder pathFinder;
     public static NodeMapper map;
-	public static HeatMap heatmap;
+    public static HeatMap heatmap;
     public static float MoveSpeed = 10.0f;
 
     public int xTiles = 25;
@@ -28,13 +29,15 @@ public class GameManager : MonoBehaviour {
     private GameObject[] outposts;
     private GameObject[] towns;
     
+	private static bool heatMapVisible;
     private int turnSeq = 0;
 
     public static List<StratObj> Locations;
 
     private Object ArmyObj;
+    public static Object TargetInd,AddVictoryInd,AddLossInd,AddUnitsInd,LoseUnitsInd;
 
-
+    private string[] Countries = new string[] { "eng","ger","usa","jap","rus" };
 
     public void Start() {
         bases = GameObject.FindGameObjectsWithTag("Base");
@@ -44,84 +47,72 @@ public class GameManager : MonoBehaviour {
         Locations = new List<StratObj>();
 
         ArmyObj = Resources.Load("Prefabs/ArmyObj"); //Load the Prefab for instantiating
+        TargetInd = Resources.Load("Prefabs/TargetInd");
+        AddVictoryInd = Resources.Load("Prefabs/Victory");
+        AddLossInd = Resources.Load("Prefabs/Defeat"); 
+        AddUnitsInd = Resources.Load("Prefabs/AddUnit"); 
+        LoseUnitsInd = Resources.Load("Prefabs/LoseUnit"); 
+
         players = new Player_AI[bases.Length]; //One Player per Base
 
         for (int i = 0; i < bases.Length; i++) { //Create Bases and Players
             bases[i].GetComponentInChildren<TextMesh>().text = "Player " + (i + 1) + "'s Base";
-            Locations.Add(new Base("Player " +(i+1)+ "'s Base", bases[i],(i+1)));
-            players[i] = new Player_AI(i+1,"Player " + (i+1), "Country" ,(Base)Locations[i]);
-            players[i].CreateNewArmy_GenerateName(InstantiateArmyObjectAt(players[i].HQ.getMapObject()));
-            players[i].CreateNewArmy_GenerateName(InstantiateArmyObjectAt(players[i].HQ.getMapObject()));
+            Locations.Add(new Base("Player " + (i + 1) + "'s Base", bases[i], players[i]));
+            players[i] = new Player_AI(i + 1, "Player " + (i + 1), Countries[i], (Base)Locations[i]);
+            Locations[i].setOwner(players[i]);
+            Locations[i].AddSoldiersToGarrison(100);
+            Locations[i].AddVehiclesToGarrison(10);
+            for (int j = 0; j < StartingArmies;j++)
+                players[i].CreateNewArmy_GenerateName(InstantiateArmyObjectAt(players[i].HQ.getMapObject()));
         }
         //Create the rest of the objectives, gets the Names from the TextMesh components
         if (!GenerateNamesForCities) {
             for (int i = 0; i < cities.Length; i++) {
-                Locations.Add(new City(cities[i].GetComponentInChildren<TextMesh>().text, cities[i], 0));
+                Locations.Add(new City(cities[i].GetComponentInChildren<TextMesh>().text, cities[i], null));
             }
         } else {
             for (int i = 0; i < cities.Length; i++) {
-                Locations.Add(new City("City " + Alphabet[i], cities[i], 0));
+                Locations.Add(new City("City " + Alphabet[i], cities[i], null));
                 cities[i].GetComponentInChildren<TextMesh>().text = "City " + Alphabet[i];
             }
         }
         if (!GenerateNamesForOutPosts) {
             for (int i = 0; i < outposts.Length; i++) {
-                Locations.Add(new Outpost(outposts[i].GetComponentInChildren<TextMesh>().text, outposts[i], 0));
+                Locations.Add(new Outpost(outposts[i].GetComponentInChildren<TextMesh>().text, outposts[i], null));
             }
         } else {
             for (int i = 0; i < outposts.Length; i++) {
-                Locations.Add(new Outpost("FOB " + Alphabet[i], outposts[i], 0));
+                Locations.Add(new Outpost("FOB " + Alphabet[i], outposts[i], null));
                 outposts[i].GetComponentInChildren<TextMesh>().text = "FOB " + Alphabet[i];
             }
         }
         if (!GenerateNamesForTowns) {
             for (int i = 0; i < towns.Length; i++) {
-                Locations.Add(new Town(towns[i].GetComponentInChildren<TextMesh>().text, towns[i], 0));
+                Locations.Add(new Town(towns[i].GetComponentInChildren<TextMesh>().text, towns[i], null));
             }
         } else {
             for (int i = 0; i < towns.Length; i++) {
-                Locations.Add(new Town("Town " + Alphabet[i], towns[i], 0));
+                Locations.Add(new Town("Town " + Alphabet[i], towns[i], null));
                 towns[i].GetComponentInChildren<TextMesh>().text = "Town " + Alphabet[i];
             }
         }
-        
-               
-        
-       //Write everything to the log to check!
-       /* foreach (StratObj o in Locations){
-            Debug.Log(o.ToString());
-        }   
 
-        foreach(Player p in players){
-            Debug.Log(p.ToString());
-            foreach (Army a in p.Armies) {
-                Debug.Log(a.ToString());
-            }
-        }*/
+        map			= new NodeMapper(xTiles, yTiles, Locations, players.Length);
+        pathFinder	= new PathFinder(map.Map);
+        heatmap		= new HeatMap(map.Map, Locations, players, xTiles, yTiles);
 
-        
-       
-        /*foreach (StratObj p in Locations) {
-            Debug.DrawRay(Locations[0].getMapPosition(),p.getMapPosition() - Locations[0].getMapPosition(),Color.blue,60);
-            Debug.Log("Distance from " + Locations[0].Name + " to " + p.getName() + ": " + (Locations[0].getMapPosition() - p.getMapPosition()).magnitude);
-        }  */
-
-        map = new NodeMapper(xTiles, yTiles, Locations, players.Length);
-        pathFinder = new PathFinder(map.Map);
-		heatmap = new HeatMap ( map.Map, Locations, players, xTiles, yTiles );	//<<<<<<<<<Heat Map Init
-
-       /* List<Cell> fullPath = pathFinder.FindPath(map.Map[0, 0], map.Map[3, 7]); //Test path
-        int n = 1;
-        fullPath.ForEach(delegate(Cell cell) {
-            Debug.Log("Cell #" + n + " is at ( " + cell.x + ", " + cell.y + ")");
-        });*/
-
-        //players[0].Armies[0].MoveTo(new Vector3(0, 0, 0));
+		heatMapVisible	= false;
 
         //Everything is in place for the AI to take over from here.
         players[0].TakeTurn();
         UpdateObjNames(); //Updates Names to Include Ownership ID
+        UpdateObjInfo();
     }
+
+	public void showMap(){
+		heatMapVisible = !heatMapVisible;
+		heatmap.show (heatMapVisible);
+	}
 
     public static List<Army> GetAllEnemyArmies(int ID) {
         List<Army> enemyArmies = new List<Army>();
@@ -132,12 +123,29 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
-            return enemyArmies;
+        return enemyArmies;
     }
 
+    /*Iinstatiation functions, Visual indicators*/
     public GameObject InstantiateArmyObjectAt(GameObject pos) {
         return (GameObject)Instantiate(ArmyObj, pos.transform.position, Quaternion.identity);
     }
+    public static void InstantiateTargetIndAt(Vector3 pos){
+        Instantiate(TargetInd, pos - Vector3.forward, Quaternion.identity);
+    }
+    public static void InstantiateVictoryAt(Vector3 pos) {
+        Instantiate(AddVictoryInd, pos - Vector3.forward, Quaternion.identity);
+    }
+    public static void InstantiateDefeatAt(Vector3 pos) {
+        Instantiate(AddLossInd, pos - Vector3.forward, Quaternion.identity);
+    }
+    public static void InstantiateAddUnitAt(Vector3 pos) {
+        Instantiate(AddUnitsInd, pos - Vector3.forward, Quaternion.identity);
+    }
+    public static void InstantiateLoseUnitAt(Vector3 pos) {
+        Instantiate(LoseUnitsInd, pos - Vector3.forward, Quaternion.identity);
+    }
+
 
     public void NextTurn() {
         turnSeq++;
@@ -145,22 +153,31 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Update() {
-        MoveArmiesOnMap();//Checks Armies to see if they have movement paths Queued up
-        ResolvePendingBattles();
+
+		if (Input.GetKeyDown (KeyCode.H))
+			this.showMap ();
 
         if (players[turnSeq].finishedTurn && !players[turnSeq].isBusy()) {
             Debug.Log("GameManager: Next turn!");
+            UpdateObjInfo();
             UpdateObjNames();
+            CleanUpArmies();
+            CleanUpTargets();
             players[turnSeq].finishedTurn = false;
-			heatmap.UpdateHeatMap();				//<<<<<<<<<Heat Map Update
-            NextTurn();
+
+			if(heatMapVisible)
+				heatmap.UpdateHeatMap(turnSeq);
+            
+			NextTurn();
             players[turnSeq].TakeTurn();
         } else {
-            
+            MoveArmiesOnMap();//Checks Armies to see if they have movement paths Queued up
+            MoveArmiesOnMapToEnter();
+            ResolvePendingBattles();
         }
     }
 
-    public void UpdateObjNames() {
+    public static void UpdateObjNames() {
         foreach (StratObj obj in Locations) {
             obj.gObj.GetComponentInChildren<TextMesh>().text = obj.getName();
         }
@@ -168,6 +185,29 @@ public class GameManager : MonoBehaviour {
             foreach (Army a in p.Armies) {
                 a.UpdateNumbers();
             }
+        }
+    }
+    public static void UpdateObjInfo() {
+        foreach (StratObj obj in Locations) {
+            obj.UpdateInfo();
+            if (obj.getOwnerID() != 0) {
+                players[obj.getOwnerID()-1].addObjective(obj);
+            }
+        }
+    }
+    public void CleanUpArmies() {
+        foreach (Player p in players) {
+            for(int i =0;i<p.Armies.Count;i++){
+                if (p.Armies[i].isDefeated()) {
+                    p.Armies.Remove(p.Armies[i]);
+                    p.Armies[i].ArmyObject.SetActive(false);
+                }
+            }
+        }
+    }
+    public void CleanUpTargets() {
+        foreach (GameObject o in GameObject.FindGameObjectsWithTag("target")) {
+            Destroy(o);
         }
     }
 
@@ -184,13 +224,39 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+    public void MoveArmiesOnMapToEnter() {
+        if (players[turnSeq].ArmiesWaitingToEnter.Count > 0) {
+            Army a = players[turnSeq].ArmiesWaitingToEnter.Peek();
+            if (a.MovingPath.Count > 0) {
+                
+                a.ArmyObject.transform.Translate((a.MovingPath.Peek() - a.ArmyObject.transform.position).normalized * Time.deltaTime * ArmyMoveSpeed);
+                if ((a.MovingPath.Peek() - a.ArmyObject.transform.position).magnitude < 0.1) {
+                    a.MovingPath.Dequeue();
+                }
+            } else {
+                a.Enter(FindStratObjFromGameObj(a.CurrentTarget));
+                players[turnSeq].ArmiesWaitingToEnter.Dequeue();
+            }
+        }
+    }
     public void ResolvePendingBattles() {
         if (players[turnSeq].BattlesWaitingToResolve.Count > 0 && players[turnSeq].ArmiesWaitingToMove.Count == 0) {
             Battle b = players[turnSeq].BattlesWaitingToResolve.Dequeue();
             b.AutoResolve();
+            b = null;
         }
     }
-    
+
+    public StratObj FindStratObjFromGameObj(GameObject gobj) {
+        foreach (StratObj o in Locations) {
+            if (o.gObj == gobj) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+        
     private string[] Alphabet = new string[] { 
         "Alpha",
         "Bravo",

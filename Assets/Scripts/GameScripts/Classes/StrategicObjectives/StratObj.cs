@@ -13,33 +13,38 @@ using System.Collections.Generic;
 public class StratObj{
 
 	public string Name;
-	public int OwnerID; //Keep track of the owner
+	public Player Owner; //Keep track of the owner
     public Army OccupyingArmy; //Armies at this town
     public ForceComp Garrison; //Garrison acts like and army, but just defends the town
 	public int DefenceLevel; //1-100
 	public int SupplyLevel; //Probably just the raw supply number
     public Vector3 MapPosition; //We'll get the town's co-ordinates on the map, and it's connected towns from this object.
     public GameObject gObj;
-	public int x, y;		//cell map coordinates	<<<<<<<<ADDED COORDINATES 
+    private TextMesh[] TextMeshes;
+    public int x, y;		//cell map coordinates
 
 	public StratObj(){}	//Need this for inheritance
 	
 	//Contructor will take the name, the gameObject(Location) and the enum type
-	public StratObj(string n,GameObject p,int OwnerID){
+	public StratObj(string n,GameObject p,Player Owner){
 		Name = n; //Name always set
 		gObj = p;
         p.tag = "Objective";
         MapPosition = p.transform.position;
-        this.OwnerID = OwnerID;
+        this.Owner = Owner;
         OccupyingArmy = null;
         Garrison = new ForceComp();
+
+        TextMeshes = gObj.GetComponentsInChildren<TextMesh>();
+        TextMeshes[0].text = n;
+        TextMeshes[1].text = "";
    	}
 	
 	public int getStrategicValueForAI(Player_AI player){
-        int dist_from_base = (int)(MapPosition - player.HQ.getMapPosition()).magnitude;
-        int SupplyValue = getSupplyLevel()/dist_from_base + player.FocusOnSupplies;
-        int DefenceValue = getDefenceLevel()/dist_from_base + player.Aggresivness;
-        return 100 - dist_from_base;
+        if (getOwnerID() == player.ID) return 0; //No value to attack if it's owned already!
+        int dist_from_base = (int)Vector3.Distance(this.gObj.transform.position,player.HQ.gObj.transform.position);
+        //Debug.Log("STRAT VALUE: " + player.Name + " sees " + this.Name + " as " + ((100 + player.FocusOnSupplies) - dist_from_base));
+        return (100+player.FocusOnSupplies) - dist_from_base;
 	}
 
     public void MoneyToDefences(int Money){
@@ -48,19 +53,28 @@ public class StratObj{
     public void MoneyToSupply(int Money){
         this.SupplyLevel += Money / getUpgradeSupplyCost();
     }
+
+    public void AddSoldiersToGarrison(int n) {
+        Garrison.AddSoldiers(n, this.Owner);
+    }
+    public void AddVehiclesToGarrison(int n) {
+        Garrison.AddVehicles(n, this.Owner);
+    }
 	
 	//Setters
 	public void setName(string n){Name=n;}
-    public void setOwner(int id) { OwnerID = id; }
+    public void setOwner(Player Owner){ this.Owner = Owner; }
     public void setArmy(Army a) {
         OccupyingArmy = a;
-        a.ArmyObject.transform.position = this.gObj.transform.position + Vector3.down;
-        a.ArmyObject.transform.localScale = a.ArmyObject.transform.localScale / 2;
-        setOwner(a.OwnerID);
+        //a.ArmyObject.transform.position = this.gObj.transform.position + Vector3.down;
+        //a.ArmyObject.transform.localScale = a.ArmyObject.transform.localScale / 2;
+        OccupyingArmy.ArmyObject.SetActive(false);
+        setOwner(a.getOwner());
     }
     public void clearArmy() {         
-        OccupyingArmy.ArmyObject.transform.position = this.gObj.transform.position - Vector3.down;
-        OccupyingArmy.ArmyObject.transform.localScale = OccupyingArmy.ArmyObject.transform.localScale * 2;
+        //OccupyingArmy.ArmyObject.transform.position = this.gObj.transform.position - Vector3.down;
+        //OccupyingArmy.ArmyObject.transform.localScale = OccupyingArmy.ArmyObject.transform.localScale * 2;
+        OccupyingArmy.ArmyObject.SetActive(true);
         OccupyingArmy = null;
     }
 
@@ -81,8 +95,16 @@ public class StratObj{
         }
     }
 
+    public void UpdateInfo() {
+        TextMeshes[1].text = "D: " + getDefenceLevel() +
+                           "\nS: " + getSupplyLevel();
+    }
+
 	//Getters
-	public string getName(){return Name + " ("+OwnerID+")";}
+	public string getName(){
+        if (OccupyingArmy != null) return Name + " (" + getOwnerID() + ")" + "(" + OccupyingArmy.getName() + ")";
+        else return Name + " ("+getOwnerID()+")";
+    }
 	public int getDefenceLevel(){return DefenceLevel;}
 	public int getSupplyLevel(){return SupplyLevel;}
 	public GameObject getMapObject(){return gObj;}
@@ -90,6 +112,11 @@ public class StratObj{
     public int getUpgradeDefenceCost() { return 1; }
     public int getUpgradeSupplyCost() { return 1; }
     public Army getArmy() { return OccupyingArmy; }
+    public Player getOwner(){ return Owner; }
+    public int getOwnerID() {
+        if (Owner == null) return 0;
+        return Owner.ID; 
+    }
 
     public int getStrength() {
         int str = 0;

@@ -5,7 +5,7 @@ using System.Collections;
 public class City : StratObj {
 	//public List<Building> buildings; //TODO: Add building's that you can build in Cities
 	
-	public City(string n,GameObject p,int OwnerID):base(n,p,OwnerID){
+	public City(string n,GameObject p,Player Owner):base(n,p,Owner){
 		DefenceLevel = 50;
 		SupplyLevel = 50;
 	}

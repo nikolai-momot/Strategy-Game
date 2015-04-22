@@ -4,71 +4,77 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Cell {
+
 	private StratObj objective;
-	public float leftEdge, rightEdge, topEdge, bottomEdge;
+	private float leftEdge, rightEdge, topEdge, bottomEdge;
 	public float height, width;
-	public Vector3 position;	//top-right point of the tile
+	public Vector3 position;
 	public bool filled;
-	//public bool obstructed;
 	public int x, y;
 	public List<Cell> neighbors;
 	public Cell parent;
 	public int[] heat;
+	public Color32 color;
 
 	public Cell ( float nodeHeight, float nodeWidth, Vector3 nodePosition, List<StratObj> locations, int players)
 	{	
-		this.neighbors = new List<Cell>();
-		this.heat = new int[players];
-		//Recording hight, width and location of node
-		this.height = nodeHeight;
-		this.width = nodeWidth;
-		this.position = nodePosition;
+		this.neighbors = new List<Cell>();		//Cell Neighbors
+		this.heat = new int[players];			//Cell Heat Value
+		this.height = nodeHeight;				//Cell Height
+		this.width = nodeWidth;					//Cell Width
+		this.position = nodePosition;			//Cell Position, top-left point of the tile
 
-		//Determining the edges of the node
-		this.leftEdge = position.x;
-		this.rightEdge = position.x + width;
-		this.topEdge = position.y;
-		this.bottomEdge = position.y + height;
+		this.leftEdge = position.x;				//Left edge of the cell
+		this.rightEdge = position.x + width;	//Right edge of the cell
+		this.topEdge = position.y;				//Top edge of the cell
+		this.bottomEdge = position.y + height;	//Bottom edge of the cell
+
+		this.filled = false;					//Occupied by StratObj 
 
 		//Checking if a Strategic Objective is located inside the node
-		locations.ForEach (delegate( StratObj location ) {
-			if( containsVector(location.MapPosition) ){
-				setObjective(location);
-				this.filled = true;
-				return;
+		foreach (StratObj location in locations) {
+			if (this.containsVector (location.MapPosition)) {
+				this.setObjective (location);//Set cell StratObj
+				break;
 			}
+		}
 
-		});
-
-		//if no Strategic objective is located inside the node, record it as empty
-		this.filled = false;
-
+		return;
 	}
 
+	//Checks the vector3 coordinates are within the cell  borders
 	public bool containsVector( Vector3 location ){
-		if ( (location.x >= leftEdge && location.x < rightEdge) && (location.y >= topEdge && location.y < bottomEdge) )
+		if ( ( location.x >= this.leftEdge && location.x < this.rightEdge ) && ( location.y >= this.topEdge && location.y < this.bottomEdge ) )
 			return true;
 
 		return false;
 	}
 
+	//Return the cell's objective, if there is one
 	public StratObj getObjective(){
-		if (filled) 
-			return objective;
-		
+		if ( this.filled ) 
+			return this.objective;
+
 		return null;
 	}
 
+	//Setting the objective inside the cell
 	public void setObjective( StratObj newObj ){
-		objective = newObj;
-		filled = true;
+		this.objective = newObj;
+		this.filled = true;
+
+		return;
 	}
 
+	//Setting the cell's coordinates in the cell map
 	public void setXY( int newX, int newY ){
-		x = newX;
-		y = newY;
+		this.x = newX;
+		this.y = newY;
+
+		return;
 	}
 
+	//Writing out the cell's location and whether or not it has a StratObj inside of it
 	public override string ToString(){
 		if(this.filled)
 			return "Cell at ("+this.x+", "+this.y+") is filled";

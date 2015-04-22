@@ -49,9 +49,13 @@
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\DataGatherer.cs" />
      <Compile Include="Assets\Scripts\DataManager.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Animations\GrowAndFade.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Animations\SlideDown.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Animations\SlideUp.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Army.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Battle.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Cell.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Classes\HeatMap.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\NodeMapper.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Player.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\Player_AI.cs" />
@@ -60,9 +64,10 @@
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Outpost.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\StratObj.cs" />
      <Compile Include="Assets\Scripts\GameScripts\Classes\StrategicObjectives\Town.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\Classes\Task.cs" />
      <Compile Include="Assets\Scripts\GameScripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\GameScripts\HeatMap.cs" />
      <Compile Include="Assets\Scripts\GameScripts\PathFinder.cs" />
+     <Compile Include="Assets\Scripts\GameScripts\TargetIndAnimate.cs" />
      <Compile Include="Assets\Scripts\MapSwitcher.cs" />
      <Compile Include="Assets\Scripts\MissionGenerator.cs" />
      <Compile Include="Assets\Scripts\Navigator.cs" />

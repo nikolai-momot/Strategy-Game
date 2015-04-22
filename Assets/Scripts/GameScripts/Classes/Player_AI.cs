@@ -11,19 +11,21 @@ public class Player_AI : Player{
 	public int Riskiness; //The theshold to take risks. Less Risky = Will wait for better odds to attack
 
     public Queue<Army> ArmiesWaitingToMove;
+    public Queue<Army> ArmiesWaitingToEnter;
     public Queue<Battle> BattlesWaitingToResolve;
 
     
 	public Player_AI(int id,string name,string country,Base hq):base(id,name,country,hq){	
 	//Calls Player Constructor
-        /*Aggresivness = Random.Range(1,100);
-        Defencivness = Random.Range(1, 100);
-        FocusOnSupplies = Random.Range(1, 100);*/
-        Aggresivness = 100;
-        Defencivness = 50;
+        Aggresivness = Random.Range(35,100);
+        Defencivness = Random.Range(35, 100);
+        FocusOnSupplies = Random.Range(1, 100);
         FocusOnSupplies = 0;
+        //Aggresivness = 10;
+        //Defencivness = 100;
 
         ArmiesWaitingToMove = new Queue<Army>();
+        ArmiesWaitingToEnter = new Queue<Army>();
         BattlesWaitingToResolve = new Queue<Battle>();
 	}
 	
@@ -32,7 +34,7 @@ public class Player_AI : Player{
         Debug.Log(Name + ": Taking my turn...");
         CollectIncome();
         MoveArmies();
-        SpendMoneyOnTowns();		
+        SpendMoneyOnTowns();
 		EndTurn();
 	}
 
@@ -67,7 +69,8 @@ public class Player_AI : Player{
 	public void MoveArmies(){
         Debug.Log(Name + ": Moving My armies...");
 		//Any Armies that weren't upgraded can now choose where to move
-        foreach (Army a in Armies) {            
+        foreach (Army a in Armies) {
+            a.CurrentTarget = null;
             int RecDes = RecruitDes(a);
             int AtkDes = AttackDes(a);
             Debug.Log(Name + ": Army " + a.getName() + " RecDes = " + RecDes + " AtkDes = " +  AtkDes);
@@ -78,6 +81,7 @@ public class Player_AI : Player{
                 if (HTVArmy.getStrategicValueForAI(a) > HTVStratObj.getStrategicValueForAI(this)) {
                     Battle b = a.AttackTarget(HTVArmy);
                     if (b != null) {
+
                         ArmiesWaitingToMove.Enqueue(a);
                         BattlesWaitingToResolve.Enqueue(b);
                     } else {
@@ -94,6 +98,18 @@ public class Player_AI : Player{
                 }
             }else{
                 /*Chooses to Recruit, needs to buy units or move to a town/buy units*/
+                if (a.currentObj != null) {
+                    /*Recruit!*/
+                    /*Spends at least 10% of it's money, but up to all of it. Based on how weak the army is*/
+                    SpendOnRecruitment(CalculateRecruitmentMoney(), a);
+                } else {
+                    /*Move to closest OBJ!*/
+                    if (a.MoveToEnter(getClosestOwnedObj(a))) {
+                        ArmiesWaitingToEnter.Enqueue(a); // Is close enough to enter base
+                    } else {
+                        ArmiesWaitingToMove.Enqueue(a); //Will just move for now...
+                    }
+                }
             }
         }
     }
@@ -124,38 +140,62 @@ public class Player_AI : Player{
     public int getRequestedSpendingMoney(StratObj town) { //Asks the town how much money it wants for upgrades
         int request = 0;
         request = (int)((-0.5f*(town.getDefenceLevel()) + 50) + (-0.5f*(town.getSupplyLevel()) + 50));
+        Debug.Log("== " + town.getName() + " requests " + request);
         return request; 
     }
 
     //Army Movement / Attacking 
     public int AttackDes(Army a) {
-        return 50 + Aggresivness;
+        return (a.getStrength()/2) + Aggresivness;
     }
     public Army getHTVArmy(Army a) {
         List<Army> EnemyArmies = GameManager.GetAllEnemyArmies(ID);
         int hvt_index = 0;
+        bool AlreadyTargeted;
         for (int i = 0; i < EnemyArmies.Count; i++) {
+            AlreadyTargeted = false;
             if (EnemyArmies[hvt_index].getStrategicValueForAI(a) < EnemyArmies[i].getStrategicValueForAI(a)) {
-                hvt_index = i;
+                foreach (Army b in Armies) {
+                    if (b.CurrentTarget == EnemyArmies[hvt_index].ArmyObject) {
+                        AlreadyTargeted = true;
+                        break;
+                    }
+                }
+                if(!AlreadyTargeted)hvt_index = i;
             }
         }
         return EnemyArmies[hvt_index];
     }
     public StratObj getHTVStratObj() {
-        int hvt_index = GameManager.Locations.Count - 1;
+        int hvt_index = 0;
+        bool AlreadyTargeted;
         for (int i = 0; i < GameManager.Locations.Count; i++) {
-            if (GameManager.Locations[i].OwnerID != this.ID) {
-                if (GameManager.Locations[hvt_index].getStrategicValueForAI(this) < GameManager.Locations[i].getStrategicValueForAI(this)) {
-                    hvt_index = i;
+            AlreadyTargeted = false;
+            if (GameManager.Locations[hvt_index].getStrategicValueForAI(this) < GameManager.Locations[i].getStrategicValueForAI(this)) {
+                foreach (Army b in Armies) {
+                    if (b.CurrentTarget == GameManager.Locations[i].gObj) {
+                        AlreadyTargeted = true;
+                    }
                 }
+                if(!AlreadyTargeted)hvt_index = i;
             }
         }
         return GameManager.Locations[hvt_index];
     }
+    public StratObj getClosestOwnedObj(Army army) {
+        int closest_index = 0;
+        for (int i = 0; i < Objectives.Count; i++) {
+            if (getDistance(army.ArmyObject.transform.position, Objectives[closest_index].gObj.transform.position) > getDistance(army.ArmyObject.transform.position, Objectives[i].gObj.transform.position)) {
+                if(Objectives[i].OccupyingArmy == null)closest_index = i;
+            }
+        }
+        Debug.Log("Found closest point to be: " + Objectives[closest_index].getName());
+        return Objectives[closest_index];
+    }
   
     //Army Recruitment    
     public int RecruitDes(Army army) { //How much the Army wants to be reinforced
-        return (50 + Defencivness) - army.Force.GetSoldierCount() - 4 * army.Force.GetVehicleCount(); 
+        return (50 + Defencivness) - army.Force.GetSoldierCount() - 3 * army.Force.GetVehicleCount(); 
     }
     public int getRequestedSpendingMoney(Army army) {//Asks the Army how much money it wants to spend on recruitment
         return (100-army.Force.GetSoldierCount()) + (10 - army.Force.GetVehicleCount()); 
@@ -171,30 +211,36 @@ public class Player_AI : Player{
         return MoneyforDefence + MoneyforSupply; 
     } 
     public int SpendOnRecruitment(int SpendingMoney, Army army) { //Gives the army money to spend, Returns Amount spent 
-        int MoneyforInfantry = (int)(SpendingMoney * 0.7f);
+        int MoneyforInfantry = (int)(SpendingMoney * 0.6f);
         int MoneyforVehicles = SpendingMoney - MoneyforInfantry;
         int NumberofInfantry = MoneyforInfantry / 3;
         int NumberofVehicles = MoneyforVehicles / 10;
         int Spent = 0;
         if (NumberofInfantry > 0) {
-            army.Force.AddSoldiers(NumberofInfantry);
+            army.Force.AddSoldiers(NumberofInfantry,this);
             Spent += NumberofInfantry*3;
         }
         if (NumberofVehicles > 0) {
-            army.Force.AddVehicles(NumberofVehicles);
+            army.Force.AddVehicles(NumberofVehicles,this);
             Spent += NumberofVehicles * 10;
         }
         Debug.Log(army.Name + " spent $" + Spent + " on recruitment, Attained: " + NumberofInfantry + " infantry and " + NumberofVehicles + " vehicles.");
         return Spent; 
     }
 
+    /* Utility Functions */
     public bool isBusy() {
-        return (ArmiesWaitingToMove.Count + BattlesWaitingToResolve.Count)>0;
+        return (ArmiesWaitingToMove.Count + BattlesWaitingToResolve.Count + ArmiesWaitingToEnter.Count)>0;
     }
 
     public int CalculateAvailableMoney(int Request, int TotalRequested) {
     /*Takes the percentage of the total money requested, and gives that percentage of the available money*/
         return Money*(Request/TotalRequested);
+    }
+    public int CalculateRecruitmentMoney() {
+        int initialSpending = Money/2;
+        int AggressionSpending = (Mathf.Clamp(Aggresivness,0,Money - initialSpending));
+        return initialSpending + AggressionSpending;
     }
 
     public int SumOfArray(int[] a) {
@@ -203,6 +249,9 @@ public class Player_AI : Player{
             sum += a[i];
         }
         return sum;
+    }
+    public float getDistance(Vector3 a, Vector3 b) {
+        return Vector3.Distance(a,b);
     }
     
 }

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class Army{
 
 	public string Name;
-    public int OwnerID;
+    public Player Owner;
     public General Leader;
 	public ForceComp Force;
     public GameObject ArmyObject;
@@ -17,22 +17,25 @@ public class Army{
 	int Wins, Losses, Morale;
 
     public Queue<Vector3> MovingPath;
+    public GameObject CurrentTarget;
     
     /******* Creation *******/
-	public Army(string n,GameObject ArmyObject, int Owner){
+	public Army(string n,GameObject ArmyObject, Player Owner){
 		Name = n;
-        this.OwnerID = Owner;
+        this.Owner = Owner;
         Leader = new General(GenerateName());
         this.ArmyObject = ArmyObject;
+        ArmyObject.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Flags/flag_" + Owner.Country);
 		Force = new ForceComp(); //Default Army
-		Force.AddSoldiers(30);
-		Force.AddVehicles(2);
+		Force.AddSoldiers(30,Owner);
+		Force.AddVehicles(2,Owner);
 
         //currentCell = hq; //Starts at the HQ
 		Wins = 0;
 		Losses = 0;
 		Morale = 100; //TODO: set a scale for morale or something
         MovingPath = new Queue<Vector3>();
+        CurrentTarget = null;
 
         TextMeshes = ArmyObject.GetComponentsInChildren<TextMesh>();
         TextMeshes[0].text = n;
@@ -43,11 +46,7 @@ public class Army{
     public string GenerateName() { /*Use a NameList to generate names for generals*/ 
         return "Cmdr." + this.Name; 
     }
-
-    public void Destroy() {
-        Debug.Log(Name + " destroyed!");
-    }
-
+        
     /******* Get Data *******/
     public int getStrength() {
         return Force.EstimateStrength();
@@ -56,9 +55,9 @@ public class Army{
         return Force.GetSoldierCount() + 5*Force.GetVehicleCount();
     }
     public float getMoveRange() {
-        float range = 25;
+        float range = 50;
         if (Force.GetSoldierCount() < (Force.GetVehicleCount() * 10)) {
-            range = 50;
+            range = 150;
         }
         return range;
     }
@@ -71,7 +70,7 @@ public class Army{
         return dist;
     }
     public int getStrategicValueForAI(Army a) {
-        return (a.getStrength() - getStrength()) - (int)(ArmyObject.transform.position - a.ArmyObject.transform.position).magnitude;
+        return (a.getStrength() - getStrength()) - (int)Mathf.Pow(Vector3.Distance(ArmyObject.transform.position,a.ArmyObject.transform.position),2);
     }
     public bool inObj() { return currentObj != null; } //True if in an Objective (currentObj not null)
 
@@ -79,10 +78,11 @@ public class Army{
     public void Retreat() {
         float x = Random.Range(-(getMoveRange() / 2)/10, getMoveRange() / 2/10);
         float y = Random.Range(-(getMoveRange() / 2)/10, getMoveRange() / 2/10);
-        MoveTo(ArmyObject.transform.position + new Vector3(x,y,0));
+        JumpTo(ArmyObject.transform.position + new Vector3(x,y,0));
     }
     public Battle AttackTarget(Army target) {
         Debug.Log(Name + ": Moving to attack " + target.getName());
+        CurrentTarget = target.ArmyObject;
         if (MoveTo(target.ArmyObject.transform.position)) {
             return new Battle(this, target);
         } else {
@@ -91,13 +91,24 @@ public class Army{
     }
     public Battle AttackTarget(StratObj target) {
         Debug.Log(Name + ": Moving to attack " + target.getName());
+        CurrentTarget = target.gObj;
         if (MoveTo(target.gObj.transform.position)) {
             return new Battle(this, target);
         } else {
             return null;
         }
     }
+    public bool MoveToEnter(StratObj target) {
+        Debug.Log("Moving to Enter " + target.getName());
+        CurrentTarget = target.gObj;
+        if (MoveTo(target.gObj.transform.position)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public bool MoveTo(Vector3 dest) {
+        GameManager.InstantiateTargetIndAt(dest); //visual indication of target
         if (currentObj != null) {//If army is in a town, exit the town before moving
             Leave();
         }
@@ -126,28 +137,49 @@ public class Army{
         }
         return finish;
     }
+    public void JumpTo(Vector3 dest) {
+        /*Teleports army to destination*/
+        if (currentObj != null) {//If army is in a town, exit the town before moving
+            Leave();
+        }
+        this.ArmyObject.transform.position = dest;
+    }
     public void Enter(StratObj obj) {
-        Debug.Log(Name + " entering " + obj.getName());
-        obj.setArmy(this);
-        currentObj = obj;
+        if (obj.getArmy() == null) {
+            Debug.Log(Name + " entering " + obj.getName());
+            obj.setArmy(this);
+            currentObj = obj;
+        } else if (obj.getArmy().getOwnerID() == this.getOwnerID()) {
+            Debug.Log(Name + " Can't enter " + obj.getName() + ". " + obj.getArmy().getName() + " is already there");
+        } else {
+            Debug.Log(Name + " taking " + obj.getName() + " from " + obj.getArmy().getName());
+            obj.getArmy().Leave();
+            obj.setArmy(this);
+            currentObj = obj;
+        }
+        GameManager.UpdateObjNames();
     }
     public void Leave() {
         Debug.Log(Name + " Leaving " + currentObj.getName());
         currentObj.clearArmy();
         currentObj = null;
+        GameManager.UpdateObjNames();
     }
 
     /******* Modifiers *******/
-    public void RecruitInfantry(int n) { 
+    public void RecruitInfantry(int n) {
+        GameManager.InstantiateAddUnitAt(ArmyObject.transform.position);
         /*Add N Infantry to Force*/
-        Force.AddSoldiers(n);
+        Force.AddSoldiers(n,Owner);
     }
-    public void RecruitVehicle(int n) { 
+    public void RecruitVehicle(int n) {
+        GameManager.InstantiateAddUnitAt(ArmyObject.transform.position);
         /*Add N Vehicles to Force*/
-        Force.AddVehicles(n);
+        Force.AddVehicles(n,Owner);
     }
 
     public void TakeLosses(int n) {
+        GameManager.InstantiateLoseUnitAt(ArmyObject.transform.position);
         Debug.Log(Name + " taking " + n + " losses!");
         if (n >= Force.GetSoldierCount() + Force.GetVehicleCount()) {
             Destroy();
@@ -165,19 +197,33 @@ public class Army{
         TextMeshes[1].text = "Inf: " + Force.GetSoldierCount();
         TextMeshes[2].text = "Tk: " + Force.GetVehicleCount();
     }
-      	
+    public void Destroy() {
+        ArmyObject.SetActive(false);
+        Debug.Log(Name + " destroyed!");
+    }
+    public bool isDefeated() {
+        return getStrength() == 0;
+    }
 	
 	
 	//Getters
 	public string getName(){return this.Name;}
 	public int getWins(){return this.Wins;}
 	public int getLosses(){return this.Losses;}
+    public Player getOwner() { return Owner; }
+    public int getOwnerID() { return Owner.ID; }
 
 	//Setters
 	public void setWins(int x){this.Wins=x;}
 	public void setLosses(int x){this.Losses=x;}	
-	public void AddWin(){this.Wins++;}
-	public void AddLoss(){this.Losses++;}
+	public void AddWin(){
+        GameManager.InstantiateVictoryAt(ArmyObject.transform.position);
+        this.Wins++;
+    }
+	public void AddLoss(){
+        GameManager.InstantiateDefeatAt(ArmyObject.transform.position);
+        this.Losses++;
+    }
 
     public override string ToString() {
         return "The " + Name + ", Commanded by: " + this.Leader.getName() + " has " + Force.GetSoldierCount() + " infantry, " + Force.GetVehicleCount() + " vehicles.";

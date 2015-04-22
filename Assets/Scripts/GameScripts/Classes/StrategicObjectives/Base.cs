@@ -6,10 +6,10 @@ public class Base : StratObj {
 	
 	public string TownsInSupplyLine;
 	
-	public Base(string n,GameObject p,int OwnerID):base(n,p,OwnerID){
+	public Base(string n,GameObject p,Player Owner):base(n,p,Owner){
 		DefenceLevel = 75;
 		SupplyLevel = 150;
-		TownsInSupplyLine = "";
+		TownsInSupplyLine = "";        
 	}
 	
 	

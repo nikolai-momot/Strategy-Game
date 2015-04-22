@@ -16,6 +16,8 @@ public class Player{
 	public List<Army> Armies; //List so they can get more than just the starting Armies
 	public List<StratObj> Objectives;
     public bool finishedTurn = false;
+
+    private int UnitID = -1; //Used for recruiting new units, give them unique IDs
 	
 	public Player(){
 		
@@ -28,6 +30,8 @@ public class Player{
 		HQ=hq;
 		Armies = new List<Army>();
         Objectives = new List<StratObj>();
+        Objectives.Add(hq);
+        hq.gObj.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Flags/flag_" + country);
 	}
 
     public void TakeTurn() {
@@ -35,8 +39,7 @@ public class Player{
     }
 
     public void CreateNewArmy(string n, GameObject ArmyObj) {
-		Armies.Add(new Army(n,ArmyObj,this.ID));
-        ArmyObj.GetComponentInChildren<TextMesh>().text = n;
+		Armies.Add(new Army(n,ArmyObj,this));        
 	}
 	
 	public void CreateNewArmy_GenerateName(GameObject ArmyObj){
@@ -44,7 +47,7 @@ public class Player{
 		string n = "";
 		if(num%100 == 13){ //Special Case where number ends with a 3, but has a th instead of rd
 			n+= num + "th Division";
-			Armies.Add(new Army(n,ArmyObj,this.ID));
+			Armies.Add(new Army(n,ArmyObj,this));
 			return;
 		}		
 		switch(num%10){
@@ -61,8 +64,7 @@ public class Player{
 			n+=num + "th Division";
 			break;				
 		}
-        Armies.Add(new Army(n, ArmyObj, this.ID));
-        ArmyObj.GetComponentInChildren<TextMesh>().text = n;
+        Armies.Add(new Army(n, ArmyObj, this));
 	}
 
     
@@ -92,7 +94,22 @@ public class Player{
         Money += GetProfit();
         Debug.Log(Name + ": Collecting " + GetProfit() + ". I now have: " + Money);
     }
-	
+
+    public void addObjective(StratObj obj) {
+        if (!Objectives.Contains(obj)) {
+            Objectives.Add(obj);
+        }
+    }
+
+    public int getNextID() {
+        UnitID++;
+        return UnitID;
+    }
+
+    public void setHQ(Base hq) {
+        HQ = hq;
+    }
+    	
 	public override string ToString ()
 	{
 		return "Player " + this.ID + ", " + this.Name + " - " + this.Country;

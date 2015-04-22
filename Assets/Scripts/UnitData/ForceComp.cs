@@ -17,7 +17,7 @@ public class ForceComp {
 
 
 	public ForceComp(){
-		this.Name = "Generic ForceComp";
+		this.Name = "Garrison";
 		this.Squads = new Dictionary<string,Squad> ();
 		this.Infantry = new Dictionary<string,Human> ();
 		this.Vehicles = new Dictionary<string,Vehicle> ();
@@ -62,20 +62,20 @@ public class ForceComp {
 
    /*******************/
 	
-	public void AddSoldier(){ //Create Empty soldier.
-		this.Infantry.Add ("0x"+(Infantry.Count + 1),new Human());
-	}	
-	public void AddVehicle(){ //Create Empty Vehicle
-		this.Vehicles.Add ("0x"+(Vehicles.Count + 1),new Vehicle());
+	public void AddSoldier(Player p){ //Create Empty soldier.
+		this.Infantry.Add ("0x"+p.getNextID(),new Human());
 	}
-	public void AddSoldiers(int n){ //Create Empty Soldiers, for game start
+    public void AddVehicle(Player p) { //Create Empty Vehicle
+        this.Vehicles.Add("0x" + p.getNextID(), new Vehicle());
+	}
+    public void AddSoldiers(int n, Player p) { //Create Empty Soldiers, for game start
 		for(int i=0;i<n;i++){
-			this.Infantry.Add ("0x"+(Infantry.Count + 1),new Human());
+            this.Infantry.Add("0x" + p.getNextID(), new Human());
 		}
-	}	
-	public void AddVehicles(int n){ //Create Empty Vehicles, for game start
+	}
+    public void AddVehicles(int n, Player p) { //Create Empty Vehicles, for game start
 		for(int i=0;i<n;i++){
-			this.Vehicles.Add ("0x"+(Vehicles.Count + 1),new Vehicle());
+            this.Vehicles.Add("0x" + p.getNextID(), new Vehicle());
 		}
 	}
 	

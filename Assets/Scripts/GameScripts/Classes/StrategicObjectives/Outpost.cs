@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Outpost : StratObj {
-	public Outpost(string n,GameObject p,int OwnerID):base(n,p,OwnerID){
+	public Outpost(string n,GameObject p,Player Owner):base(n,p,Owner){
 		DefenceLevel = 35;
 		SupplyLevel = 25;
 	}

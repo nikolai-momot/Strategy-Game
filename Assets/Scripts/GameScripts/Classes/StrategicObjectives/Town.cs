@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Town : StratObj {
-	public Town(string n,GameObject p,int OwnerID):base(n,p,OwnerID){
+	public Town(string n,GameObject p,Player Owner):base(n,p,Owner){
 		DefenceLevel = 15;
 		SupplyLevel = 50;
 	}
