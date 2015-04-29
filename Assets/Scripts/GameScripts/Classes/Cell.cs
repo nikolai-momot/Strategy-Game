@@ -33,7 +33,7 @@ public class Cell {
 
 		//Checking if a Strategic Objective is located inside the node
 		foreach (StratObj location in locations) {
-			if (this.containsVector (location.MapPosition)) {
+			if (this.containsVector (location.getMapPosition())) {
 				this.setObjective (location);//Set cell StratObj
 				break;
 			}

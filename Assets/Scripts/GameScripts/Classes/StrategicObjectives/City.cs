@@ -6,16 +6,11 @@ public class City : StratObj {
 	//public List<Building> buildings; //TODO: Add building's that you can build in Cities
 	
 	public City(string n,GameObject p,Player Owner):base(n,p,Owner){
-		DefenceLevel = 50;
-		SupplyLevel = 50;
+		DefenceLevel = 35;
+		SupplyLevel = 35;
 	}
 
-    public new void MoneyToDefences(float Money) {
-        this.DefenceLevel += (int)(Money / getUpgradeDefenceCost());
-    }
-    public new void MoneyToSupply(float Money) {
-        this.SupplyLevel += (int)(Money / getUpgradeSupplyCost());
-    }
+    
     public float getUpgradeDefenceCost() {
         return ((1 / 500) * Mathf.Pow(DefenceLevel, 2.1f));
     }

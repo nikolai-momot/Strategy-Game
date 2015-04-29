@@ -130,19 +130,22 @@ public class HeatMap{
 			//Proceed if the objective is occupied by someone
             if (objective.getOwnerID() == 0)
                 continue;
-
             //Setting the heat range based on the type of objective
             switch (objective.DefenceLevel) {
                 case 75:					//Base
+					Debug.Log("Heating a base");
 					distributeObjHeat(this.map[objective.x, objective.y], objective, this.heatRange);
                     break;
-                case 50:					//City
+			case 50:					//City
+				Debug.Log("Heating a city");
 					distributeObjHeat(this.map[objective.x, objective.y], objective, this.heatRange - 1);
                     break;
-                case 35:					//Outpost
+			case 35:					//Outpost
+				Debug.Log("Heating an outpost");
 					distributeObjHeat(this.map[objective.x, objective.y], objective, this.heatRange - 2);
                     break;
-                case 15:					//Town
+			case 15:					//Town
+				Debug.Log("Heating a town");
 					distributeObjHeat(this.map[objective.x, objective.y], objective, this.heatRange - 3);
                     break;
             }
@@ -160,6 +163,7 @@ public class HeatMap{
             defence = obj.DefenceLevel;	//Objective defence level
 
         float xDist, yDist;				//Distance from center
+
 
         for (int i = x - range; i <= x + range; i++) {
             xDist = Mathf.Abs(i - x);	//Absolute distance from the center x value

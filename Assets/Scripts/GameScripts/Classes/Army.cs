@@ -17,7 +17,7 @@ public class Army{
 	int Wins, Losses, Morale;
 
     private int InfCost = 15; //Cost to buy a soldier
-    private int VehicleCost = 50; //Cost to buy a vehicle
+    private int VehicleCost = 45; //Cost to buy a vehicle
     private int InfPerVehicle = 5; // # of infantry that can ride on a vehicle. Effects how far the army can move
 
     public Queue<Vector3> MovingPath;
@@ -28,8 +28,7 @@ public class Army{
 		Name = n;
         this.Owner = Owner;
         Leader = new General(GenerateName());
-        this.ArmyObject = ArmyObject;
-        ArmyObject.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Flags/flag_" + Owner.Country);
+        this.ArmyObject = ArmyObject;        
 		Force = new ForceComp(); //Default Army
 		Force.AddSoldiers(30,Owner);
 		Force.AddVehicles(2,Owner);
@@ -41,10 +40,13 @@ public class Army{
         MovingPath = new Queue<Vector3>();
         CurrentTarget = null;
 
-        TextMeshes = ArmyObject.GetComponentsInChildren<TextMesh>();
-        TextMeshes[0].text = n;
-        TextMeshes[1].text = "Inf: " + Force.GetSoldierCount();
-        TextMeshes[2].text = "Tk: " + Force.GetVehicleCount();
+        if (ArmyObject != null) { //If we have an Army Object, set up the visuals
+            ArmyObject.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Flags/flag_" + Owner.Country);
+            TextMeshes = ArmyObject.GetComponentsInChildren<TextMesh>();
+            TextMeshes[0].text = n;
+            TextMeshes[1].text = "Inf: " + Force.GetSoldierCount();
+            TextMeshes[2].text = "Tk: " + Force.GetVehicleCount();
+        }
 	}
     
     public string GenerateName() { /*Use a NameList to generate names for generals*/ 
@@ -81,11 +83,14 @@ public class Army{
 
     /******* Game actions *******/
     public void Retreat() {
-        float dist = Random.Range(-2, 2);
+        //float dist = Random.Range(-2, 2);
         /*Vector3 fallback = (Owner.getClosestOwnedObj(this).getMapPosition() - getMapPosition());
         Debug.DrawRay(getMapPosition(),fallback,Color.black,5);
-        ArmyObject.SetActive(true);*/
+        ArmyObject.SetActive(true);
         Vector3 fallback = new Vector3(getMapPosition().x + dist,getMapPosition().y + dist,getMapPosition().z);
+        JumpTo(fallback);
+        GameManager.InstantiateRetreatIndAt(fallback);*/
+        Vector3 fallback = GameManager.GetRetreatLocation(this);
         JumpTo(fallback);
         GameManager.InstantiateRetreatIndAt(fallback);
     }
@@ -159,20 +164,29 @@ public class Army{
         setPosition(dest);
     }
     public void Enter(StratObj obj) {
-        if (obj.getArmy() == null) {
-            Debug.Log(Name + " entering " + obj.getName());
+
+        if (obj.getOwnerID() == this.getOwnerID()) { // We own this Obj
+            if (obj.getArmy() == null) {
+                Debug.Log(Name + " entering " + obj.getName());
+                setPosition(obj.getMapPosition());
+                obj.setArmy(this);
+                currentObj = obj;
+            } else {
+                if (obj.getArmy() == this) {
+                    //Uhh we're already in there? Just clear the army and try again...
+                    obj.clearArmy();
+                    Enter(obj);
+                }
+                setPosition(obj.getMapPosition());
+                Debug.Log(Name + " Can't enter " + obj.getName() + ". " + obj.getArmy().getName() + " is already there");
+            }
+        } else { //We don't own the Obj
+            Debug.Log(Name + " taking " + obj.getName());
+            if(obj.getArmy() != null) obj.getArmy().Leave();            
             setPosition(obj.getMapPosition());
             obj.setArmy(this);
             currentObj = obj;
-        } else if (obj.getArmy().getOwnerID() == this.getOwnerID()) {
-            setPosition(obj.getMapPosition());
-            Debug.Log(Name + " Can't enter " + obj.getName() + ". " + obj.getArmy().getName() + " is already there");
-        } else {
-            Debug.Log(Name + " taking " + obj.getName() + " from " + obj.getArmy().getName());
-            obj.getArmy().Leave();
-            setPosition(obj.getMapPosition());
-            obj.setArmy(this);
-            currentObj = obj;
+            obj.ClearGarrison();
         }
         GameManager.UpdateObjNames();
     }
@@ -185,20 +199,20 @@ public class Army{
 
     /******* Modifiers *******/
     public float RecruitInfantry(int n) {
-        GameManager.InstantiateAddUnitAt(ArmyObject.transform.position);
+        if(ArmyObject != null)GameManager.InstantiateAddUnitAt(ArmyObject.transform.position);
         /*Add N Infantry to Force*/
         Force.AddSoldiers(n,Owner);
         return n * InfCost; // return what we spent
     }
     public float RecruitVehicle(int n) {
-        GameManager.InstantiateAddUnitAt(ArmyObject.transform.position);
+        if (ArmyObject != null) GameManager.InstantiateAddUnitAt(ArmyObject.transform.position);
         /*Add N Vehicles to Force*/
         Force.AddVehicles(n,Owner);
         return n * InfCost; // return what we spent
     }
 
     public void TakeLosses(int n) {
-        GameManager.InstantiateLoseUnitAt(ArmyObject.transform.position);
+        if (ArmyObject != null) GameManager.InstantiateLoseUnitAt(ArmyObject.transform.position);
         Debug.Log(Name + " taking " + n + " losses!");
         if (n >= Force.GetSoldierCount() + Force.GetVehicleCount()) {
             Force.RemoveSoldiers(Force.GetSoldierCount());
@@ -250,11 +264,11 @@ public class Army{
 	public void setWins(int x){this.Wins=x;}
 	public void setLosses(int x){this.Losses=x;}	
 	public void AddWin(){
-        GameManager.InstantiateVictoryAt(ArmyObject.transform.position);
+        if (ArmyObject != null) GameManager.InstantiateVictoryAt(ArmyObject.transform.position);
         this.Wins++;
     }
 	public void AddLoss(){
-        GameManager.InstantiateDefeatAt(ArmyObject.transform.position);
+        if (ArmyObject != null) GameManager.InstantiateDefeatAt(ArmyObject.transform.position);
         this.Losses++;
     }
     public void setPosition(Vector3 newPos) {
@@ -262,7 +276,8 @@ public class Army{
     }
 
     public override string ToString() {
-        return "The " + Name + ", Commanded by: " + this.Leader.getName() + " has " + Force.GetSoldierCount() + " infantry, " + Force.GetVehicleCount() + " vehicles.";
+        return "The " + Name + ", Commanded by: " + this.Leader.getName() + " has " + Wins + " Victories and " + Losses + " defeats.\n"
+               + Force.GetSoldierCount() + " Infantry, and " + Force.GetVehicleCount() + " Vehicles.";
     }
 
 }

@@ -1,20 +1,35 @@
 Final Project || April 22nd, 2015
-Nikolai Momot - 103821049
-Ryan Lawson - 103821049
-=========================================================================================
+Nikolai Momot - 103821049 - momot@uwindsor.ca
+Ryan Lawson - 103783912 - lawsonr@uwindsor.ca
+=======================================================================
 Summary:
-We created strategy game that pits two to five AI player against each other.The players - each starting with a base, two units and some money - must use their intellect to conquer nearby towns, recruit units and defeat the other players. The game is designed in such a way that a new map can be created in minutes: dragging a base prefab onto the map adds a player to the game, extra objectives(cities, towns, etc) can be added by placing their respcted prefabs on the game map. 
-******************************************************************************************
+We created strategy game that pits two to five AI player against each other.The players - starting with a base, two units and some money - must use their intellect to conquer nearby towns, 
+recruit units and defeat the other players. The game is designed in such a way that a new map can be created in minutes: dragging a base prefab onto the map adds a player to the game, 
+extra objectives(cities, towns, etc) can be added by placing their respected prefabs on the game map. 
+
 Implemented by Nikolai:
 
 Heat Map - By toggling with the H key you can display the threat given off by the players, represented by a gradient from yellow to orange to red
 
 PathFinding - The map is devided into a grid of cells, invisible to the observer, that the AI use to navigate to where they want to go using an A* search algorithm
-******************************************************************************************
+
 Implemented by Ryan:
 
-Economy - 
+Central Architecture - 
+The core game mechanics, the Players, GameManager, Strategic Objective class & children, etc.
+
+There are alot of things which aren't used for this AI demo, alot of code is in place to further develop this into a playable game.
+Everything from the ForceComp down in hierarchy is not relevant for the AI, it is in place for the future.
+
+The goal of the game is to take the Other player's bases. If it's a 1v1, the player simply needs to take the other's base.
+If there are multiple players, the player who first owns all of the bases wins.
+
+note: the actual balance and function of the game its self was put secondary to the AI decision making.
+As a result, the game can't be won. It seems to end with the winning player choosing to repeatedly pummel weakened enemy armies.
+Since it can't take the base...
 
 Decision Making - 
-
-Central Architecture - 
+Each player is represented by a Player_AI class. 
+This class controls the given armies, collects and spends money, recruits units for armies and town garrisons etc.
+Preliminary Influence Map usage: Armies retreat away from a battle in the direction that has the least heat,
+resulting in them moving away from Danger in the best path they can.

@@ -57,7 +57,7 @@ public class Battle {
                       "\n" + attacker.getName() + " rolled " + atk +
                       "\n" + Objective.getName() + " rolled " + def);
 
-            if (atk > def) { //attacker wins                
+            if (atk >= def) { //attacker wins                
                 if (def > 0) {
                     attacker.TakeLosses(Random.Range(0, def / 3)); //Winner                    
                 }                
@@ -70,7 +70,7 @@ public class Battle {
                 }
                 attacker.Enter(Objective);
             } else { //defender wins
-                Objective.OccupyingArmy.AddWin();
+                if(Objective.OccupyingArmy != null)Objective.OccupyingArmy.AddWin();
                 attacker.AddLoss();
                 attacker.Retreat();
                 Objective.TakeLosses(Random.Range(0, atk / 4)); //Winner

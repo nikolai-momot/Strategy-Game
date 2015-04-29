@@ -3,13 +3,10 @@ using System.Collections;
 
 
 public class Base : StratObj {
-	
-	public string TownsInSupplyLine;
-	
+		
 	public Base(string n,GameObject p,Player Owner):base(n,p,Owner){
 		DefenceLevel = 75;
-		SupplyLevel = 150;
-		TownsInSupplyLine = "";        
+		SupplyLevel = 100;       
 	}
 	
 	
@@ -19,13 +16,7 @@ public class Base : StratObj {
 		foreach (Town t in ConnectedTowns.Values) {
 		}*/
 	}
-
-    public new void MoneyToDefences(float Money) {
-        this.DefenceLevel += (int)(Money / getUpgradeDefenceCost());
-    }
-    public new void MoneyToSupply(float Money) {
-        this.SupplyLevel += (int)(Money / getUpgradeSupplyCost());
-    }
+    
     public float getUpgradeDefenceCost() {
         return ((1/500)*Mathf.Pow(DefenceLevel,2.2f));
     }

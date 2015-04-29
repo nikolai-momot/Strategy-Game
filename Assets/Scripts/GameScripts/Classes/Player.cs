@@ -18,7 +18,7 @@ public class Player{
     public bool finishedTurn = false;
 
     private int UnitID = -1; //Used for recruiting new units, give them unique IDs
-
+    
     public Queue<Army> ArmiesWaitingToMove;
     public Queue<Army> ArmiesWaitingToEnter;
     public Queue<Battle> BattlesWaitingToResolve;
@@ -34,8 +34,7 @@ public class Player{
 		HQ=hq;
 		Armies = new List<Army>();
         Objectives = new List<StratObj>();
-        Objectives.Add(hq);
-        hq.gObj.GetComponentInChildren<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Flags/flag_" + country);
+        Objectives.Add(hq);        
         ArmiesWaitingToMove = new Queue<Army>();
         ArmiesWaitingToEnter = new Queue<Army>();
         BattlesWaitingToResolve = new Queue<Battle>();
@@ -117,6 +116,12 @@ public class Player{
             Objectives.Add(obj);
         }
     }
+    public void RemoveObjective(StratObj obj) {
+        if (Objectives.Contains(obj)) {
+            Debug.Log("Removing OBJ " + obj.getName() + " from " + Name);
+            Objectives.Remove(obj);
+        }
+    }
 
     public int getNextID() {
         UnitID++;
@@ -130,7 +135,9 @@ public class Player{
         return HQ.getMapPosition();
     }
 
-    	
+    public string getCountry() {
+        return Country;
+    }	
 	public override string ToString ()
 	{
 		return "Player " + this.ID + ", " + this.Name + " - " + this.Country;

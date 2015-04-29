@@ -7,6 +7,9 @@ using System.Collections.Generic;
  * */
 public class GameManager : MonoBehaviour {
 
+    public bool VerboseAI = false;
+    public bool VerboseGameManager = false;
+    public bool DebugDisplay = false;
     //public List<Cell> Obstacles;
     public bool GenerateNamesForBases = false;
     public bool GenerateNamesForTowns = false;
@@ -28,9 +31,10 @@ public class GameManager : MonoBehaviour {
     private GameObject[] cities;
     private GameObject[] outposts;
     private GameObject[] towns;
-    
+
     private static bool heatMapVisible;
     private int turnSeq = 0;
+    private int TurnCount = 1;
 
     public static List<StratObj> Locations;
     public static int InfantryCost = 3;
@@ -40,6 +44,13 @@ public class GameManager : MonoBehaviour {
     public static Object TargetInd,AddVictoryInd,AddLossInd,AddUnitsInd,LoseUnitsInd,RetreatInd;
 
     private string[] Countries = new string[] { "eng","ger","usa","jap","rus" };
+
+    void OnGUI() {
+        if(DebugDisplay)GUI.Label(new Rect(10, 10, 1000, 1000), "Turn Counter: " + TurnCount+
+                                                              "\nTimeScale: " + Time.timeScale+
+                                                              "\nTurn: " + players[turnSeq].Name+
+                                                              "\nheatMapVisible: " + heatMapVisible);
+    }
 
     public void Start() {
         bases = GameObject.FindGameObjectsWithTag("Base");
@@ -61,7 +72,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < bases.Length; i++) { //Create Bases and Players
             bases[i].GetComponentInChildren<TextMesh>().text = "Player " + (i + 1) + "'s Base";
             Locations.Add(new Base("Player " + (i + 1) + "'s Base", bases[i], players[i]));
-            players[i] = new Player_AI(i + 1, "Player " + (i + 1), Countries[i], (Base)Locations[i]);
+            players[i] = new Player_AI(i + 1, "Player " + (i + 1), Countries[i], (Base)Locations[i], VerboseAI);
             Locations[i].setOwner(players[i]);
             Locations[i].AddSoldiersToGarrison(100);
             Locations[i].AddVehiclesToGarrison(10);
@@ -100,11 +111,11 @@ public class GameManager : MonoBehaviour {
             }
         }        
         
-        map         = new NodeMapper(xTiles, yTiles, Locations, players.Length);
-        pathFinder  = new PathFinder(map.Map);
-        heatmap     = new HeatMap(map.Map, Locations, players, xTiles, yTiles);
+        map = new NodeMapper(xTiles, yTiles, Locations, players.Length);
+        pathFinder = new PathFinder(map.Map);
+        heatmap = new HeatMap(map.Map, Locations, players, xTiles, yTiles);
 
-        heatMapVisible  = false;
+        heatMapVisible = false;
 
         //Everything is in place for the AI to take over from here.
         players[0].TakeTurn();
@@ -112,9 +123,9 @@ public class GameManager : MonoBehaviour {
         UpdateObjInfo();
     }
 
-    public void showMap(){
+    public void showMap() {
         heatMapVisible = !heatMapVisible;
-        heatmap.show (heatMapVisible);
+        heatmap.show(heatMapVisible);
     }
 
     public static List<Army> GetAllEnemyArmies(int ID) {
@@ -130,7 +141,7 @@ public class GameManager : MonoBehaviour {
             return enemyArmies;
     }
 
-    /*Instatiation functions, Visual indicators*/
+    /*Iinstatiation functions, Visual indicators*/
     public GameObject InstantiateArmyObjectAt(GameObject pos) {
         return (GameObject)Instantiate(ArmyObj, pos.transform.position, Quaternion.identity);
     }
@@ -156,12 +167,31 @@ public class GameManager : MonoBehaviour {
 
     public void NextTurn() {
         turnSeq++;
-        if (turnSeq >= players.Length)turnSeq = 0;
+        if (turnSeq >= players.Length) {
+            turnSeq = 0;
+            TurnCount++;
+            if (VerboseGameManager) Debug.Log("Turn: " + TurnCount);
+        }
+
+        if (VerboseGameManager) {
+            string str = "";
+            foreach (Player p in players) {
+                str += "\n==== " + p.Name + " ====\n ==== Objs:";
+                foreach (StratObj o in p.Objectives) {
+                    str += "\n- " + o.ToString();
+                }
+                str += "\n====================\n ==== Armies:";
+                foreach (Army a in p.Armies) {
+                    str += "\n- " + a.ToString();
+                }
+            }
+            str += "\n====================\n";
+            Debug.Log(str);
+        }
     }
 
     public void Update() {
-		if (Input.GetKeyDown (KeyCode.H))
-			this.showMap ();
+        
 
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             if(Time.timeScale <= 9.5f)
@@ -169,6 +199,14 @@ public class GameManager : MonoBehaviour {
         } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
             if(Time.timeScale >= 0.5f)
                 Time.timeScale -= 0.5f;
+        }  else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+            if (Time.timeScale >0.1f)
+                Time.timeScale -= 0.1f;
+        } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+            if (Time.timeScale <=9.9f)
+                Time.timeScale += 0.1f;
+        } else if (Input.GetKeyDown(KeyCode.H)) {
+            this.showMap();
         }
 
         if (players[turnSeq].finishedTurn && !players[turnSeq].isBusy()) {
@@ -178,16 +216,17 @@ public class GameManager : MonoBehaviour {
             UpdateObjInfo();
             UpdateObjNames();
             players[turnSeq].finishedTurn = false;
+
             NextTurn();
 
-			if(heatMapVisible)
-				heatmap.UpdateHeatMap(turnSeq);
+            if (heatMapVisible)
+                heatmap.UpdateHeatMap(turnSeq);
 
             players[turnSeq].TakeTurn();
         } else {
 
-			if(heatMapVisible)
-				heatmap.UpdateHeatMap(turnSeq);
+            if (heatMapVisible)
+                heatmap.UpdateHeatMap(turnSeq);
 
             MoveArmiesOnMap();//Checks Armies to see if they have movement paths Queued up
             MoveArmiesOnMapToEnter();
@@ -209,7 +248,12 @@ public class GameManager : MonoBehaviour {
         foreach (StratObj obj in Locations) {
             obj.UpdateInfo();
             if (obj.getOwnerID() != 0) {
-                players[obj.getOwnerID()-1].addObjective(obj);
+                players[obj.getOwnerID()-1].addObjective(obj);                
+            }
+            foreach (Player p in players) {
+                if (p.ID != obj.getOwnerID() && p.Objectives.Contains(obj)) {
+                    p.RemoveObjective(obj);
+                }
             }
         }
     }
@@ -265,6 +309,10 @@ public class GameManager : MonoBehaviour {
             b.AutoResolve();
             b = null;
         }
+    }
+
+    public static Vector3 GetRetreatLocation(Army a) {
+        return map.lowestHeat(pathFinder.cellFromVector(a.getMapPosition()), a.getOwnerID(), players.Length).position;
     }
 
     public StratObj FindStratObjFromGameObj(GameObject gobj) {

@@ -9,14 +9,16 @@ public class Player_AI : Player{
 	public int Defencivness; //Focus on upgrading Defences 
 	public int FocusOnSupplies; //Focus on Upgrading Supply generating buildings
 	public int Riskiness; //The theshold to take risks. Less Risky = Will wait for better odds to attack
+
+    private bool Verbose;
     
     
-	public Player_AI(int id,string name,string country,Base hq):base(id,name,country,hq){	
+	public Player_AI(int id,string name,string country,Base hq,bool v):base(id,name,country,hq){	
 	//Calls Player Constructor
-        Aggresivness = Random.Range(35,100);
-        Defencivness = Random.Range(35, 100);
-        FocusOnSupplies = Random.Range(10, 100);
-        
+        Aggresivness = Random.Range(35,350);
+        Defencivness = Random.Range(35, 200);
+        FocusOnSupplies = Random.Range(10, 200);
+        Verbose = v;
         //Aggresivness = 10;
         //Defencivness = 100;
         //FocusOnSupplies = 0;        
@@ -24,21 +26,24 @@ public class Player_AI : Player{
 	
 	//Turn Sequence
 	public new void TakeTurn(){
-        Debug.Log(Name + ": Taking my turn...");
+        if(Verbose) Debug.Log(Name + ": Taking my turn...");
         CollectIncome();
         Money -= (int)SpendMoneyOnTowns();
-        Debug.Log(Name + ", Money: " + Money);
+        //if(Verbose) Debug.Log(Name + ", Money: " + Money);
         MoveArmies();
-        Debug.Log(Name + ", Money: " + Money);
+        //if(Verbose) Debug.Log(Name + ", Money: " + Money);
 		EndTurn();
 	}
 
     /*All towns and armies will request money to spend, they will get what they request unless the Player doesn't have enough money.
      *In which case, they Player will give the appropriate proportion of it's money to be spent.*/
     public float SpendMoneyOnTowns() {
-        Debug.Log(Name + ": Spending money on StratObjs...");
-        if (GetRevenue() <= 0) {
-            Debug.Log(Name + ": I don't have enough income...");
+        if(Verbose) Debug.Log(Name + ": Spending money on StratObjs...");
+        if (GetRevenue() <= 50) {
+            if(Verbose) Debug.Log(Name + ": I don't have enough income...");            
+            FocusOnSupplies += 50;          
+        }
+        if (GetRevenue() < 0) {
             return 0f;
         }
 		//Look at money, Strategic points, Armies. 
@@ -49,6 +54,7 @@ public class Player_AI : Player{
         
         for (int i = 0; i < ObjSpendingBudget.Length; i++) { //Ask all towns how much money they need
             ObjSpendingBudget[i] = getRequestedSpendingMoney(Objectives[i]);
+            if (Verbose) Debug.Log("== " + Objectives[i].getName() + " requests " + ObjSpendingBudget[i]);
         }
         totalRequestedMoney = SumOfArray(ObjSpendingBudget);
 
@@ -61,12 +67,12 @@ public class Player_AI : Player{
                 totalSpent += SpendOnTownUpgrades(CalculateAvailableMoney(ObjSpendingBudget[i],SumOfArray(ObjSpendingBudget)),Objectives[i]);
             }
         }
-        Debug.Log(Name + ": Spent "+totalSpent+" on StratObjs.");
+        if(Verbose) Debug.Log(Name + ": Spent "+totalSpent+" on StratObjs.");
         return totalSpent;
     }
 	
 	public void MoveArmies(){
-        Debug.Log(Name + ": Moving My armies...");
+        if(Verbose) Debug.Log(Name + ": Moving My armies...");
 		//Any Armies that weren't upgraded can now choose where to move
         foreach (Army a in Armies) {
             a.CurrentTarget = null;
@@ -74,16 +80,21 @@ public class Player_AI : Player{
             StratObj HVTStratObj = getHVTStratObj();
             int RecDes = RecruitDes(a);
             int AtkDes = AttackDes(a,HVTArmy,HVTStratObj);
-            //Debug.Log(Name + ": Army " + a.getName() + " RecDes = " + RecDes + " AtkDes = " +  AtkDes);
+            if(Verbose) Debug.Log(Name + ": Army " + a.getName() + " RecDes = " + RecDes + " AtkDes = " +  AtkDes);
             if (AtkDes > RecDes) {                
-                //Debug.Log(Name + ": Choosing to move: " + a.getName() + " || Best Army Target: " + HVTArmy.getName() + "(" + HVTArmy.getStrategicValueForAI(a) + ") Best StratObj target: " + HVTStratObj.getName()+ "(" + HVTStratObj.getStrategicValueForAI(this) + ")");                
+                if(Verbose) Debug.Log(Name + ": Choosing to move: " + a.getName() + " \n"+
+                "|| Best Army Target: " + HVTArmy.getName() + "(" + HVTArmy.getStrategicValueForAI(a) + ") Best StratObj target: " + HVTStratObj.getName()+ "(" + HVTStratObj.getStrategicValueForAI(this) + ")");                
                 if (HVTArmy.getStrategicValueForAI(a) > HVTStratObj.getStrategicValueForAI(this)) {
-                    if (HVTArmy.currentObj != null) 
+                    if (HVTArmy.currentObj != null) {
                         OrderAttackOnObj(a, HVTArmy.currentObj);
-                    else 
+                        if (Verbose) Debug.Log("Sending " +a.getName() + " at " + HVTArmy.getName());
+                    } else {
                         OrderAttackOnArmy(a, HVTArmy);
+                        if (Verbose) Debug.Log("Sending " + a.getName() + " at " + HVTArmy.getName());
+                    }
                 } else {
                     OrderAttackOnObj(a,HVTStratObj);
+                    if (Verbose) Debug.Log("Sending " + a.getName() + " at " + HVTArmy.getName());
                 }
             }else{
                 /*Chooses to Recruit, needs to buy units or move to a town/buy units*/
@@ -123,7 +134,7 @@ public class Player_AI : Player{
 	
 	public void EndTurn(){
 		//Tell the Manager we're done
-        Debug.Log(Name + ": Ending my turn");
+        if(Verbose) Debug.Log(Name + ": Ending my turn");
         finishedTurn = true;
 	}
     
@@ -146,8 +157,7 @@ public class Player_AI : Player{
     }
     public float getRequestedSpendingMoney(StratObj town) { //Asks the town how much money it wants for upgrades
         float request = 0;
-        request = ((-0.5f*(town.getDefenceLevel()) + Defencivness) + (-0.5f*(town.getSupplyLevel()) + FocusOnSupplies));
-        //Debug.Log("== " + town.getName() + " requests " + request);
+        request = ((-0.5f*(town.getDefenceLevel()) + Defencivness) + (-0.5f*(town.getSupplyLevel()) + FocusOnSupplies));        
         if (request < 0) return 0;
         return Mathf.Clamp(request,0,Money); 
     }
@@ -155,12 +165,12 @@ public class Player_AI : Player{
     //Army Movement / Attacking 
     public int AttackDes(Army a,Army HVTArmy,StratObj HVTStratObj) {
         /*No armies to attack, return the OBJ desirability*/
-        if (HVTArmy == null) return a.getStrength() - 2 * HVTStratObj.getStrength() + Aggresivness;
+        if (HVTArmy == null) return a.getStrength() - (2 * HVTStratObj.getStrength()) + Aggresivness;
         /*Return the highest of the two*/
         if (HVTArmy.getStrategicValueForAI(a) > HVTStratObj.getStrategicValueForAI(this)) {
             return a.getStrength() - HVTArmy.getStrength() + Aggresivness;
         } else {
-            return a.getStrength() - 2*HVTStratObj.getStrength() + Aggresivness;
+            return a.getStrength() - (2*HVTStratObj.getStrength()) + Aggresivness;
         }
     }
     public Army getHVTArmy(Army a) {
@@ -203,7 +213,6 @@ public class Player_AI : Player{
   
     //Army Recruitment    
     public int RecruitDes(Army army) { //How much the Army wants to be reinforced
-        
         return (50 + Defencivness) - army.Force.GetSoldierCount() - 3 * army.Force.GetVehicleCount(); 
     }
     public float getRequestedSpendingMoney(Army army) {//Asks the Army how much money it wants to spend on recruitment
@@ -215,13 +224,15 @@ public class Player_AI : Player{
 
     /*Action Functions*/
     public float SpendOnTownUpgrades(float SpendingMoney, StratObj town) { //Tell the town how much money it has to spend, return money spent
-        float MoneyforDefence = (SpendingMoney * (Defencivness / 100));
+        float MoneyforDefence = (SpendingMoney * ((Defencivness * 0.50f)/100));
         float MoneyforSupply = SpendingMoney - MoneyforDefence;
+        if (Verbose) Debug.Log(Name + "; " + town.getName() + ": Spending $" + MoneyforDefence + " on defences, and " + MoneyforSupply + " on Supply");
         town.MoneyToDefences(MoneyforDefence);
         town.MoneyToSupply(MoneyforSupply);
         return MoneyforDefence + MoneyforSupply; 
     }
-    public float SpendOnRecruitment(float SpendingMoney, Army army) { //Gives the army money to spend, Returns Amount spent 
+    public float SpendOnRecruitment(float SpendingMoney, Army army) { //Gives the army money to spend, Returns Amount spent
+        if (SpendingMoney < 0) return 0;
         float MoneyforInfantry = (SpendingMoney * 0.6f);
         float MoneyforVehicles = SpendingMoney - MoneyforInfantry;
         int NumberofInfantry = (int)MoneyforInfantry / army.getInfCost();
@@ -233,7 +244,8 @@ public class Player_AI : Player{
         if (NumberofVehicles > 0) {
             Spent += army.RecruitVehicle(NumberofVehicles);
         }
-        Debug.Log(army.Name + " spent $" + Spent + " on recruitment, Attained: " + NumberofInfantry + " infantry and " + NumberofVehicles + " vehicles.");
+        if(Verbose) Debug.Log(army.Name + " spent $" + Spent + " on recruitment, Attained: " + NumberofInfantry + " infantry and " + NumberofVehicles + " vehicles.");
+        if (Spent < 15) Aggresivness += 15;
         return Spent; 
     }
 
